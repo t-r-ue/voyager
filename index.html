@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voyager - Curated Travel Experiences</title>
+  <meta name="description" content="Voyager curates extraordinary travel for those who travel to feel something. Handpicked destinations, expert planning, journeys designed around the traveler." />
+  <meta property="og:title" content="Voyager - Curated Travel Experiences" />
+  <meta property="og:description" content="Handpicked destinations. Expert-curated travel. Journeys that matter." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+  <!-- ============================================================ EDITORIAL PAGE LOADER -->
+  <div id="loader" role="status" aria-label="Loading Voyager">
+    <div class="loader-panel-left"></div>
+    <div class="loader-panel-right"></div>
+    <div class="loader-center-content">
+      <div class="loader-logo-wrap">
+        <div class="loader-logo">Voyager</div>
+        <div class="loader-sub">Curated Travel</div>
+      </div>
+      <div class="loader-divider"></div>
+      <blockquote class="loader-quote">
+        "To travel is to live, to feel, and to remember."
+      </blockquote>
+      <div class="loader-star-ornament">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M22 2L26.5 14.5L40 14.5L29 22.5L33 35L22 27L11 35L15 22.5L4 14.5L17.5 14.5Z" stroke="#B5935A" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOUNT POINT FOR ELM APPLICATION -->
+  <div id="elm-app"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/elm.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    // Initialize the Elm application
+    window.app = Elm.Main.init({
+      node: document.getElementById('elm-app')
+    });
+  </script>
+
+</body>
+</html>

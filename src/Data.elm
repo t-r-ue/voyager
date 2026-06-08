@@ -1,0 +1,547 @@
+module Data exposing (Climate, Destination, HeroSlide, InsiderPick, Review, destinations, heroSlides, insiderPick, reviews)
+
+
+type alias Climate =
+    { temps : List Int
+    , labels : List String
+    , price : List Float
+    , best : List Int
+    }
+
+
+type alias Destination =
+    { id : String
+    , name : String
+    , country : String
+    , region : String
+    , moods : List String
+    , image : String
+    , heroImage : String
+    , gallery : List String
+    , price : Int
+    , duration : String
+    , rating : Float
+    , reviewCount : Int
+    , tags : List String
+    , shortDesc : String
+    , description : String
+    , highlights : List String
+    , included : List String
+    , climate : Climate
+    , flights : String
+    , visa : String
+    }
+
+
+type alias Review =
+    { id : Int
+    , name : String
+    , location : String
+    , destination : String
+    , rating : Int
+    , text : String
+    , avatar : String
+    , tripImage : String
+    , date : String
+    }
+
+
+type alias HeroSlide =
+    { image : String
+    , label : String
+    }
+
+
+type alias InsiderPick =
+    { destination : String
+    , pullQuote : String
+    , month : String
+    , intro : String
+    , body : String
+    , price : Int
+    , image : String
+    , destinationId : String
+    }
+
+
+heroSlides : List HeroSlide
+heroSlides =
+    [ { image = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=80", label = "Indian Ocean" }
+    , { image = "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1920&q=80", label = "Machu Picchu, Peru" }
+    , { image = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1920&q=80", label = "Serengeti, Tanzania" }
+    , { image = "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=1920&q=80", label = "South Pacific" }
+    , { image = "https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=1920&q=80", label = "Iceland, Northern Europe" }
+    ]
+
+
+insiderPick : InsiderPick
+insiderPick =
+    { destination = "Amalfi Coast, Italy"
+    , pullQuote = "Some places you visit. Some places you return to in dreams."
+    , month = "Featured  -  October"
+    , intro = "October on the Amalfi Coast is a secret kept by those who've been."
+    , body = "The crowds of August have retreated with the summer charter flights. What remains is the coast in its truest form  -  local fishermen hauling nets at Positano's harbour before the tourist yachts wake, lemons the size of your fist hanging in groves above empty hiking trails, and the kind of autumn light that turns every moment into something painted while you're inside it.\n\nWe split 8 nights between a clifftop suite in Ravello and a harbour-front room in Positano: two places that show you completely different faces of the same coast. In Ravello, the Villa Rufolo gardens are yours before 9am. In Positano, you'll navigate vertical streets by instinct by day three.\n\nThe Path of the Gods between Agerola and Nocelle takes four hours if you don't stop. We stopped many times."
+    , price = 3290
+    , image = "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1400&q=80"
+    , destinationId = "amalfi"
+    }
+
+
+reviews : List Review
+reviews =
+    [ { id = 1
+      , name = "Sofia Marchetti"
+      , location = "Milan, Italy"
+      , destination = "Santorini"
+      , rating = 5
+      , text = "Voyager curated every detail we never thought to ask for. Our private caldera suite, the surprise yacht picnic on day three  -  it felt like someone who actually loved travel had planned it, not an algorithm."
+      , avatar = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+      , tripImage = "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80"
+      , date = "September 2024"
+      }
+    , { id = 2
+      , name = "Marcus Chen"
+      , location = "San Francisco, USA"
+      , destination = "Kyoto"
+      , rating = 5
+      , text = "Three days into Kyoto I stopped taking photos because I wanted to actually be there. The ryokan Voyager chose had a garden I'd walk through in a hundred lifetimes. Worth every dollar."
+      , avatar = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+      , tripImage = "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=700&q=80"
+      , date = "April 2024"
+      }
+    , { id = 3
+      , name = "Amara Osei"
+      , location = "London, UK"
+      , destination = "Serengeti"
+      , rating = 5
+      , text = "Watching 10,000 wildebeest cross the Mara River from our private vehicle... I ugly-cried. The Voyager guide knew exactly where to position us. I've booked my second safari already."
+      , avatar = "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80"
+      , tripImage = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=700&q=80"
+      , date = "August 2024"
+      }
+    ]
+
+
+destinations : List Destination
+destinations =
+    [ { id = "santorini"
+      , name = "Santorini"
+      , country = "Greece"
+      , region = "Europe"
+      , moods = [ "romance", "escape" ]
+      , image = "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 2890
+      , duration = "7 nights"
+      , rating = 4.9
+      , reviewCount = 847
+      , tags = [ "Island", "Luxury", "Sunset" ]
+      , shortDesc = "Volcanic cliffs, whitewashed villages & legendary Aegean sunsets."
+      , description = "Perched on volcanic cliffs above the azure Aegean, Santorini delivers the iconic Greek island experience  -  whitewashed villages, blood-orange sunsets over the caldera, and wine tasting in cellar caves hewn from volcanic rock. Our curated 7-night experience stays above the fray, in private suite hotels accessible only on foot."
+      , highlights =
+            [ "Private caldera sunset cruise"
+            , "Wine tasting in Oia's cave cellars"
+            , "Black sand beach at Perissa"
+            , "Ancient ruins at Akrotiri"
+            ]
+      , included = [ "5-star boutique hotel", "Daily breakfast", "Airport transfers", "Sunset cruise", "Guided wine tour" ]
+      , climate =
+            { temps = [ 55, 56, 59, 65, 74, 82, 87, 87, 81, 73, 65, 58 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.6, 0.6, 0.7, 0.85, 1.1, 1.4, 1.8, 1.8, 1.3, 0.95, 0.7, 0.6 ]
+            , best = [ 4, 5, 8, 9 ]
+            }
+      , flights = "From JFK  -  ~10h with one stop"
+      , visa = "Schengen Visa or Visa-free (90 days)"
+      }
+    , { id = "bali"
+      , name = "Bali"
+      , country = "Indonesia"
+      , region = "Asia"
+      , moods = [ "escape", "culture", "reset" ]
+      , image = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 1890
+      , duration = "10 nights"
+      , rating = 4.8
+      , reviewCount = 1203
+      , tags = [ "Jungle", "Temples", "Wellness" ]
+      , shortDesc = "Sacred temples, jungle rice terraces & world-class surf."
+      , description = "Between rice terraces and jungle-wrapped temples, Bali moves at its own sacred rhythm. Come for the surf at Seminyak, stay for the silence of Ubud's morning mist over emerald paddies. Our private villa experience keeps you immersed in the island's soul, not its tourist infrastructure."
+      , highlights =
+            [ "Sunrise hike up Mount Batur"
+            , "Ubud cooking class & rice terrace walk"
+            , "Surf lesson at Seminyak"
+            , "Traditional Balinese spa retreat"
+            ]
+      , included = [ "Private villa with pool", "Daily breakfast", "Airport transfers", "Cooking class", "Spa session" ]
+      , climate =
+            { temps = [ 80, 80, 81, 82, 82, 80, 79, 79, 80, 82, 82, 80 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 1.0, 1.0, 1.0, 0.9, 0.8, 0.9, 1.1, 1.2, 1.0, 0.9, 1.0, 1.2 ]
+            , best = [ 5, 6, 7, 8 ]
+            }
+      , flights = "From LAX  -  ~17h with one stop"
+      , visa = "Visa on Arrival (30 days, free)"
+      }
+    , { id = "maldives"
+      , name = "Maldives"
+      , country = "Maldives"
+      , region = "Indian Ocean"
+      , moods = [ "escape", "romance" ]
+      , image = "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1540202404-d0c7fe46a1cd?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1568171025673-b25cf3c84b7c?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 4990
+      , duration = "7 nights"
+      , rating = 4.95
+      , reviewCount = 412
+      , tags = [ "Overwater", "Luxury", "Diving" ]
+      , shortDesc = "Overwater bungalows, electric lagoons & pristine coral reefs."
+      , description = "The Maldives is not a destination  -  it's a state of mind. Overwater bungalows on stilts above electric-blue lagoons, coral reefs teeming with mantas and reef sharks, and the kind of silence you forgot existed. Our resorts are chosen for isolation, not Instagram. You'll understand the difference."
+      , highlights =
+            [ "Private overwater villa with glass floor"
+            , "Sunrise manta ray snorkeling"
+            , "Underwater restaurant dining"
+            , "Sandbank picnic at sunset"
+            ]
+      , included = [ "Overwater villa", "All-inclusive meals", "Seaplane transfer", "Snorkeling gear", "Sunset cruise" ]
+      , climate =
+            { temps = [ 82, 83, 84, 84, 83, 81, 80, 80, 81, 82, 82, 82 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 1.3, 1.5, 1.4, 1.2, 0.8, 0.7, 0.7, 0.7, 0.8, 0.9, 1.1, 1.3 ]
+            , best = [ 0, 1, 2, 11 ]
+            }
+      , flights = "From NYC  -  ~20h with one stop"
+      , visa = "Visa on Arrival (30 days, free)"
+      }
+    , { id = "kyoto"
+      , name = "Kyoto"
+      , country = "Japan"
+      , region = "Asia"
+      , moods = [ "culture", "reset" ]
+      , image = "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 2390
+      , duration = "8 nights"
+      , rating = 4.9
+      , reviewCount = 934
+      , tags = [ "Temples", "Zen", "Sakura" ]
+      , shortDesc = "1,600 temples, geisha districts & bamboo groves."
+      , description = "Kyoto is Japan's soul  -  1,600 temples and shrines, geiko-haunted streets of Gion, bamboo groves whispering in Arashiyama. Walk in thousand-year-old footsteps while the tea ceremony slows time to its proper pace. We'll place you in a ryokan with a private onsen and a garden worth waking up for."
+      , highlights =
+            [ "Fushimi Inari Shrine at dawn"
+            , "Tea ceremony in a private tatami room"
+            , "Arashiyama Bamboo Grove"
+            , "Nishiki Market food tour"
+            ]
+      , included = [ "Boutique ryokan", "Breakfast & dinner", "Rail pass", "Tea ceremony", "Guided temple tour" ]
+      , climate =
+            { temps = [ 41, 43, 50, 59, 67, 74, 82, 84, 75, 63, 53, 44 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.7, 0.8, 1.4, 1.5, 0.9, 0.8, 0.9, 0.9, 1.0, 1.3, 1.1, 0.8 ]
+            , best = [ 2, 3, 9, 10 ]
+            }
+      , flights = "From NYC  -  ~14h to Tokyo, then shinkansen"
+      , visa = "Visa-free (90 days for most)"
+      }
+    , { id = "amalfi"
+      , name = "Amalfi Coast"
+      , country = "Italy"
+      , region = "Europe"
+      , moods = [ "romance", "culture" ]
+      , image = "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1555971975-36e08d2b8e40?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 3290
+      , duration = "8 nights"
+      , rating = 4.8
+      , reviewCount = 621
+      , tags = [ "Cliffside", "Gastronomy", "Boats" ]
+      , shortDesc = "Pastels, cliffs & lemon groves above the Tyrrhenian Sea."
+      , description = "Cliffside villages spilling in pastels toward an impossibly blue Tyrrhenian sea. The Amalfi Coast is Italy at its most theatrical  -  lemon groves, fishing boats, cathedral bells, and limoncello at golden hour. We split your stay across Ravello and Positano: two faces of the same coastline, equally unforgettable."
+      , highlights =
+            [ "Private yacht charter along the coast"
+            , "Cooking class with a Positano chef"
+            , "Path of the Gods hiking trail"
+            , "Day trip to Capri island"
+            ]
+      , included = [ "4-star clifftop hotel", "Daily breakfast", "Private boat tour", "Cooking class", "Airport transfers" ]
+      , climate =
+            { temps = [ 52, 53, 57, 63, 70, 78, 85, 85, 78, 68, 60, 54 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.6, 0.6, 0.7, 0.9, 1.1, 1.4, 1.8, 1.8, 1.3, 0.9, 0.65, 0.6 ]
+            , best = [ 4, 5, 8, 9 ]
+            }
+      , flights = "From NYC  -  ~9h to Rome or Naples"
+      , visa = "Schengen Visa or Visa-free (90 days)"
+      }
+    , { id = "marrakech"
+      , name = "Marrakech"
+      , country = "Morocco"
+      , region = "Africa"
+      , moods = [ "culture", "adventure" ]
+      , image = "https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1597212618440-806262de4f6b?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 1690
+      , duration = "6 nights"
+      , rating = 4.7
+      , reviewCount = 783
+      , tags = [ "Medina", "Desert", "Riads" ]
+      , shortDesc = "Spice souks, desert dunes & ornate palace riads."
+      , description = "Marrakech assaults the senses in the best possible way. The ancient medina is a labyrinth of spice souks, rooftop hammams, and hidden riads with mosaic courtyards where time slows to the call to prayer. Our Sahara extension takes you to the dunes at Merzouga for a night under stars with no light pollution."
+      , highlights =
+            [ "Camel trek at Sahara sunrise"
+            , "Hammam & traditional massage"
+            , "Djemaa el-Fna evening"
+            , "Day trip to Atlas Mountains"
+            ]
+      , included = [ "Luxury riad", "Daily breakfast", "Desert tour", "Hammam session", "Airport transfers" ]
+      , climate =
+            { temps = [ 52, 55, 62, 68, 75, 85, 97, 97, 88, 75, 62, 54 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.7, 0.7, 0.85, 1.0, 1.1, 1.2, 1.0, 0.9, 1.0, 1.1, 0.8, 0.75 ]
+            , best = [ 2, 3, 9, 10 ]
+            }
+      , flights = "From NYC  -  ~10h with one stop"
+      , visa = "Visa-free (90 days for most)"
+      }
+    , { id = "iceland"
+      , name = "Iceland"
+      , country = "Iceland"
+      , region = "Europe"
+      , moods = [ "adventure", "escape" ]
+      , image = "https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1531168418791-27f0beb42e96?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 3490
+      , duration = "8 nights"
+      , rating = 4.85
+      , reviewCount = 567
+      , tags = [ "Aurora", "Glaciers", "Geothermal" ]
+      , shortDesc = "Volcanoes, glaciers, geysers & the aurora borealis."
+      , description = "Iceland is a planet within a planet  -  where volcanoes breathe beneath glaciers, geysers erupt from moss-covered lava fields, and the Northern Lights dance across skies that forget to get dark in summer. Our winter expedition maximizes aurora chances with dedicated expert guides and private viewing spots."
+      , highlights =
+            [ "Northern Lights snowmobile expedition"
+            , "Glacier hiking on Vatnajökull"
+            , "Blue Lagoon geothermal soak"
+            , "Golden Circle private day tour"
+            ]
+      , included = [ "Boutique hotel, Reykjavik", "Daily breakfast", "Aurora tour", "Glacier hike", "Blue Lagoon access" ]
+      , climate =
+            { temps = [ 31, 32, 35, 40, 48, 55, 60, 59, 52, 42, 35, 31 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.8, 0.8, 0.9, 0.9, 1.0, 1.3, 1.5, 1.5, 1.1, 0.9, 0.8, 0.9 ]
+            , best = [ 0, 1, 2, 11 ]
+            }
+      , flights = "From NYC  -  ~6h direct (Icelandair)"
+      , visa = "Schengen Visa or Visa-free (90 days)"
+      }
+    , { id = "patagonia"
+      , name = "Patagonia"
+      , country = "Chile / Argentina"
+      , region = "South America"
+      , moods = [ "adventure", "escape" ]
+      , image = "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1548867530-6073a4fef69c?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 4290
+      , duration = "10 nights"
+      , rating = 4.9
+      , reviewCount = 289
+      , tags = [ "Trekking", "Glaciers", "Wild" ]
+      , shortDesc = "Jagged peaks, calving glaciers & true wilderness trekking."
+      , description = "At the bottom of the world, Patagonia's spires pierce clouds in a landscape so raw it feels pre-human. Trek beside the jagged towers of Torres del Paine, kayak past calving glaciers, and sleep under skies with no light pollution. Our eco-lodge route puts you inside the landscape, not outside it."
+      , highlights =
+            [ "W Trek through Torres del Paine"
+            , "Perito Moreno Glacier ice walk"
+            , "Kayaking on Lago Grey"
+            , "Condor watching at dusk"
+            ]
+      , included = [ "Eco-lodge accommodation", "All meals on trail", "Expert guide", "National park fees", "Internal flights" ]
+      , climate =
+            { temps = [ 60, 59, 55, 48, 41, 37, 35, 37, 41, 48, 54, 58 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 1.4, 1.4, 1.2, 0.8, 0.6, 0.6, 0.6, 0.7, 0.9, 1.1, 1.3, 1.4 ]
+            , best = [ 0, 1, 10, 11 ]
+            }
+      , flights = "From NYC  -  ~13h to Santiago"
+      , visa = "Visa-free (90 days for most)"
+      }
+    , { id = "swiss-alps"
+      , name = "Swiss Alps"
+      , country = "Switzerland"
+      , region = "Europe"
+      , moods = [ "adventure", "romance" ]
+      , image = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 3890
+      , duration = "7 nights"
+      , rating = 4.85
+      , reviewCount = 445
+      , tags = [ "Skiing", "Alpine", "Luxury" ]
+      , shortDesc = "Ski the Matterhorn's shadow across 360km of pistes."
+      , description = "The Swiss Alps are engineering and nature in perfect tension  -  precision rail lines threading through valleys where avalanche-fed torrents run beside centuries-old chalets. Ski Zermatt's 360km of pistes in the shadow of the Matterhorn, then soak in your chalet's private hot tub as the stars arrive."
+      , highlights =
+            [ "Skiing under the Matterhorn in Zermatt"
+            , "Glacier Express scenic train"
+            , "Jungfraujoch  -  Top of Europe at 3,454m"
+            , "Fondue dinner in a traditional chalet"
+            ]
+      , included = [ "4-star chalet hotel", "Half-board (breakfast & dinner)", "Ski pass (5 days)", "Rail passes", "Transfers" ]
+      , climate =
+            { temps = [ 23, 25, 33, 41, 50, 58, 64, 63, 55, 44, 33, 25 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 1.5, 1.5, 1.2, 0.7, 0.7, 0.9, 1.1, 1.1, 0.8, 0.7, 0.8, 1.4 ]
+            , best = [ 0, 1, 2, 6, 7 ]
+            }
+      , flights = "From NYC  -  ~9h to Zurich"
+      , visa = "Schengen Visa or Visa-free (90 days)"
+      }
+    , { id = "tokyo"
+      , name = "Tokyo"
+      , country = "Japan"
+      , region = "Asia"
+      , moods = [ "culture", "adventure" ]
+      , image = "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 2690
+      , duration = "9 nights"
+      , rating = 4.9
+      , reviewCount = 1089
+      , tags = [ "Neon", "Food", "Culture" ]
+      , shortDesc = "Ancient shrines, neon streets & the world's greatest food city."
+      , description = "Tokyo exists in several centuries simultaneously. Ancient shrines sit beneath skyscraper forests; ramen bars operate in basements of buildings taller than anything in Europe. It's the future and the past compressed into the world's most efficient megacity  -  and we know which corners to show you."
+      , highlights =
+            [ "Tsukiji outer market breakfast"
+            , "Shibuya Crossing & Harajuku street fashion"
+            , "Day trip to Nikko temples"
+            , "Omakase sushi at a Michelin-starred counter"
+            ]
+      , included = [ "Design hotel in Shinjuku", "Daily breakfast", "JR Rail Pass", "Sushi experience", "Airport transfer" ]
+      , climate =
+            { temps = [ 41, 43, 49, 59, 67, 74, 81, 84, 77, 66, 55, 45 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.8, 0.8, 1.4, 1.4, 0.9, 0.8, 0.9, 1.0, 1.0, 1.3, 1.0, 0.9 ]
+            , best = [ 2, 3, 9, 10 ]
+            }
+      , flights = "From NYC  -  ~14h direct"
+      , visa = "Visa-free (90 days for most)"
+      }
+    , { id = "new-york"
+      , name = "New York"
+      , country = "USA"
+      , region = "North America"
+      , moods = [ "culture" ]
+      , image = "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 1990
+      , duration = "5 nights"
+      , rating = 4.7
+      , reviewCount = 1456
+      , tags = [ "Skyline", "Art", "Iconic" ]
+      , shortDesc = "The city that never sleeps  -  art, food, skyline, energy."
+      , description = "New York doesn't care if you've seen it before  -  it'll show you something new. The Met, MOMA, Broadway, the High Line in spring, the West Village at 2am. No city wastes less of your time. We get you past the tourist layer and into the city that New Yorkers actually live in."
+      , highlights =
+            [ "Metropolitan Museum private tour"
+            , "Broadway show with backstage access"
+            , "Brooklyn Bridge & DUMBO"
+            , "Tasting menu at a James Beard restaurant"
+            ]
+      , included = [ "Boutique hotel in West Village", "Daily breakfast", "Museum passes", "Broadway tickets", "Transfers" ]
+      , climate =
+            { temps = [ 35, 37, 45, 55, 65, 74, 80, 78, 71, 60, 49, 39 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 0.8, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.2, 1.1, 1.1, 0.9, 1.2 ]
+            , best = [ 4, 5, 8, 9 ]
+            }
+      , flights = "Domestic flights from most US cities"
+      , visa = "ESTA for most nationalities"
+      }
+    , { id = "serengeti"
+      , name = "Serengeti"
+      , country = "Tanzania"
+      , region = "Africa"
+      , moods = [ "adventure", "escape" ]
+      , image = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80"
+      , heroImage = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80"
+      , gallery =
+            [ "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80"
+            , "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=900&q=80"
+            ]
+      , price = 5890
+      , duration = "10 nights"
+      , rating = 4.95
+      , reviewCount = 198
+      , tags = [ "Big Five", "Migration", "Luxury Camp" ]
+      , shortDesc = "The Great Migration, Big Five & luxury tented camps at dawn."
+      , description = "The Great Migration  -  1.5 million wildebeest crossing the Mara River under threat from Nile crocodiles  -  is the greatest wildlife spectacle on earth. A Serengeti safari isn't just travel. It's a reckoning with the wild world. We place our guests in the migration corridor before the crowds arrive."
+      , highlights =
+            [ "Great Migration river crossing"
+            , "Hot air balloon over the Serengeti at dawn"
+            , "Night game drive with specialist guide"
+            , "Maasai village cultural visit"
+            ]
+      , included = [ "Luxury tented camp (full board)", "All game drives", "Bush walks", "Hot air balloon", "Park fees & guide" ]
+      , climate =
+            { temps = [ 77, 78, 79, 79, 76, 72, 71, 73, 76, 78, 78, 77 ]
+            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            , price = [ 1.2, 1.4, 0.9, 0.7, 0.7, 1.0, 1.3, 1.4, 1.2, 1.0, 0.8, 1.1 ]
+            , best = [ 0, 1, 6, 7 ]
+            }
+      , flights = "From NYC  -  ~18h to Kilimanjaro airport"
+      , visa = "Visa on Arrival ($50 USD)"
+      }
+    ]
