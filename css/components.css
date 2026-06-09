@@ -208,7 +208,7 @@
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   pointer-events: none;
 }
@@ -230,26 +230,27 @@
 .modal-panel {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 1100px;
-  height: 85dvh;
-  max-height: 900px;
+  width: 94vw;
+  max-width: 1400px;
+  height: 90dvh;
+  max-height: 940px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin: 0 var(--gutter);
+  grid-template-columns: 1.1fr 1fr;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
   .modal-panel {
     grid-template-columns: 1fr;
-    height: auto;
-    max-height: 95dvh;
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
     overflow-y: auto;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    border-radius: 0;
   }
 }
 
