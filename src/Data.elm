@@ -1,4 +1,4 @@
-module Data exposing (Climate, Destination, HeroSlide, InsiderPick, Review, destinations, heroSlides, insiderPick, reviews)
+module Data exposing (Climate, Destination, HeroSlide, InsiderPick, Review, Suite, destinations, heroSlides, insiderPick, reviews)
 
 
 type alias Climate =
@@ -6,6 +6,15 @@ type alias Climate =
     , labels : List String
     , price : List Float
     , best : List Int
+    }
+
+
+type alias Suite =
+    { id : String
+    , name : String
+    , priceModifier : Int
+    , description : String
+    , image : String
     }
 
 
@@ -30,6 +39,7 @@ type alias Destination =
     , climate : Climate
     , flights : String
     , visa : String
+    , suites : List Suite
     }
 
 
@@ -158,6 +168,26 @@ destinations =
             }
       , flights = "From JFK  -  ~10h with one stop"
       , visa = "Schengen Visa or Visa-free (90 days)"
+      , suites =
+            [ { id = "santorini-cave"
+              , name = "Junior Cave Suite"
+              , priceModifier = 0
+              , description = "Traditional whitewashed cliffside cave suite featuring a private balcony and views of the Aegean Sea."
+              , image = "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "santorini-caldera"
+              , name = "Caldera View Sanctuary"
+              , priceModifier = 450
+              , description = "Elevated sanctuary offering dramatic unobstructed views of the volcano, complete with a private heated plunge pool."
+              , image = "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "santorini-grand"
+              , name = "Grand Infinity Oasis"
+              , priceModifier = 1200
+              , description = "Ultra-private residence with a expansive infinity pool, outdoor lounge, and personalized 24/7 butler service."
+              , image = "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "bali"
       , name = "Bali"
@@ -193,6 +223,26 @@ destinations =
             }
       , flights = "From LAX  -  ~17h with one stop"
       , visa = "Visa on Arrival (30 days, free)"
+      , suites =
+            [ { id = "bali-garden"
+              , name = "Garden Pool Villa"
+              , priceModifier = 0
+              , description = "Lush tropical sanctuary with private courtyard, outdoor shower, and a personal plunge pool."
+              , image = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "bali-canopy"
+              , name = "Ubud Canopy Treehouse"
+              , priceModifier = 250
+              , description = "Perched amongst Ubud's jungle canopy, offering dramatic valley views and open-air luxury living."
+              , image = "https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "bali-palace"
+              , name = "Sacred Riverfront Palace"
+              , priceModifier = 750
+              , description = "Stately villa situated directly on the sacred Ayung River, with private pavilion, butler service, and private spa area."
+              , image = "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "maldives"
       , name = "Maldives"
@@ -228,6 +278,26 @@ destinations =
             }
       , flights = "From NYC  -  ~20h with one stop"
       , visa = "Visa on Arrival (30 days, free)"
+      , suites =
+            [ { id = "maldives-beach"
+              , name = "Beachfront Retreat"
+              , priceModifier = 0
+              , description = "Secluded villa steps away from the powder-white sand, surrounded by dense tropical foliage."
+              , image = "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "maldives-lagoon"
+              , name = "Sunset Overwater Villa"
+              , priceModifier = 600
+              , description = "Stunning villa on stilts over the turquoise lagoon with private pool, hammock over the water, and direct lagoon access."
+              , image = "https://images.unsplash.com/photo-1540202404-d0c7fe46a1cd?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "maldives-residence"
+              , name = "Private Island Residence"
+              , priceModifier = 2500
+              , description = "A standalone multi-room luxury compound with dedicated chef, private jetty, and complete isolation."
+              , image = "https://images.unsplash.com/photo-1568171025673-b25cf3c84b7c?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "kyoto"
       , name = "Kyoto"
@@ -263,6 +333,26 @@ destinations =
             }
       , flights = "From NYC  -  ~14h to Tokyo, then shinkansen"
       , visa = "Visa-free (90 days for most)"
+      , suites =
+            [ { id = "kyoto-tatami"
+              , name = "Tatami Garden Room"
+              , priceModifier = 0
+              , description = "Classic washitsu with fine tatami mats, custom screens, and view of a private rock garden."
+              , image = "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "kyoto-onsen"
+              , name = "Bamboo Onsen Suite"
+              , priceModifier = 350
+              , description = "Bespoke suite featuring a private outdoor hot spring bath (onsen) surrounded by whispering bamboo."
+              , image = "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "kyoto-emperor"
+              , name = "Emperor's Heritage Sanctuary"
+              , priceModifier = 900
+              , description = "Spacious multi-room heritage suite reflecting royal Japanese designs and featuring private tea house garden access."
+              , image = "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "amalfi"
       , name = "Amalfi Coast"
@@ -298,6 +388,26 @@ destinations =
             }
       , flights = "From NYC  -  ~9h to Rome or Naples"
       , visa = "Schengen Visa or Visa-free (90 days)"
+      , suites =
+            [ { id = "amalfi-garden"
+              , name = "Ravello Garden Terrace"
+              , priceModifier = 0
+              , description = "Refined hillside suite with a lush private lemon garden and scenic vistas of the Amalfi coastline."
+              , image = "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "amalfi-harbor"
+              , name = "Positano Harborfront Suite"
+              , priceModifier = 500
+              , description = "Terraced harborfront suite positioned above Positano beach, offering sunset cocktails over active waves."
+              , image = "https://images.unsplash.com/photo-1555971975-36e08d2b8e40?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "amalfi-panoramic"
+              , name = "Villa d'Este Panoramic Sanctuary"
+              , priceModifier = 1400
+              , description = "Our most prestigious residence, featuring a cliffside infinity pool and unhindered 360-degree panoramas of the sea."
+              , image = "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "marrakech"
       , name = "Marrakech"
@@ -333,6 +443,26 @@ destinations =
             }
       , flights = "From NYC  -  ~10h with one stop"
       , visa = "Visa-free (90 days for most)"
+      , suites =
+            [ { id = "marrakech-riad"
+              , name = "Medina Courtyard Riad"
+              , priceModifier = 0
+              , description = "Intimate ground-level riad room featuring ornate hand-carved arches and access to the central pool patio."
+              , image = "https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "marrakech-atlas"
+              , name = "Atlas View Terrace Suite"
+              , priceModifier = 200
+              , description = "Spacious second-floor suite with a private rooftop terrace and panoramic views of the Atlas Mountains."
+              , image = "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "marrakech-royal"
+              , name = "Sahara Royal Pavilion"
+              , priceModifier = 650
+              , description = "Opulent penthouse suite adorned in zellige tilework, featuring an open fireplace and private hammam chamber."
+              , image = "https://images.unsplash.com/photo-1597212618440-806262de4f6b?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "iceland"
       , name = "Iceland"
@@ -368,6 +498,26 @@ destinations =
             }
       , flights = "From NYC  -  ~6h direct (Icelandair)"
       , visa = "Schengen Visa or Visa-free (90 days)"
+      , suites =
+            [ { id = "iceland-dome"
+              , name = "Aurora Glass Dome"
+              , priceModifier = 0
+              , description = "Heated geodetic glass dome enabling clear views of the aurora borealis directly from your bed."
+              , image = "https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "iceland-lodge"
+              , name = "Volcanic Crater Lodge"
+              , priceModifier = 300
+              , description = "Rustic yet luxurious log lodge built on a volcanic ridge, featuring a outdoor geothermal hot tub."
+              , image = "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "iceland-platinum"
+              , name = "Glacier Lagoon Platinum Suite"
+              , priceModifier = 850
+              , description = "Ultra-premium minimalist sanctuary overlooking Jökulsárlón glacier lagoon with private viewing deck."
+              , image = "https://images.unsplash.com/photo-1531168418791-27f0beb42e96?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "patagonia"
       , name = "Patagonia"
@@ -403,6 +553,26 @@ destinations =
             }
       , flights = "From NYC  -  ~13h to Santiago"
       , visa = "Visa-free (90 days for most)"
+      , suites =
+            [ { id = "patagonia-dome"
+              , name = "Forest Eco-Dome"
+              , priceModifier = 0
+              , description = "Geometric eco-dome located in primary native forests, featuring a wood-burning fireplace and skylight."
+              , image = "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "patagonia-lodge"
+              , name = "Torres View Lodge"
+              , priceModifier = 350
+              , description = "Luxury timber lodge built directly facing the legendary stone spires of Torres del Paine."
+              , image = "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "patagonia-signature"
+              , name = "Fjords Signature Sanctuary"
+              , priceModifier = 1000
+              , description = "Waterfront cabin located on isolated fjords with a private hot pool, panoramic windows, and personal Zodiac."
+              , image = "https://images.unsplash.com/photo-1548867530-6073a4fef69c?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "swiss-alps"
       , name = "Swiss Alps"
@@ -424,20 +594,40 @@ destinations =
       , shortDesc = "Ski the Matterhorn's shadow across 360km of pistes."
       , description = "The Swiss Alps are engineering and nature in perfect tension  -  precision rail lines threading through valleys where avalanche-fed torrents run beside centuries-old chalets. Ski Zermatt's 360km of pistes in the shadow of the Matterhorn, then soak in your chalet's private hot tub as the stars arrive."
       , highlights =
-            [ "Skiing under the Matterhorn in Zermatt"
-            , "Glacier Express scenic train"
-            , "Jungfraujoch  -  Top of Europe at 3,454m"
-            , "Fondue dinner in a traditional chalet"
-            ]
+          [ "Skiing under the Matterhorn in Zermatt"
+          , "Glacier Express scenic train"
+          , "Jungfraujoch  -  Top of Europe at 3,454m"
+          , "Fondue dinner in a traditional chalet"
+          ]
       , included = [ "4-star chalet hotel", "Half-board (breakfast & dinner)", "Ski pass (5 days)", "Rail passes", "Transfers" ]
       , climate =
-            { temps = [ 23, 25, 33, 41, 50, 58, 64, 63, 55, 44, 33, 25 ]
-            , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            , price = [ 1.5, 1.5, 1.2, 0.7, 0.7, 0.9, 1.1, 1.1, 0.8, 0.7, 0.8, 1.4 ]
-            , best = [ 0, 1, 2, 6, 7 ]
-            }
+          { temps = [ 23, 25, 33, 41, 50, 58, 64, 63, 55, 44, 33, 25 ]
+          , labels = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+          , price = [ 1.5, 1.5, 1.2, 0.7, 0.7, 0.9, 1.1, 1.1, 0.8, 0.7, 0.8, 1.4 ]
+          , best = [ 0, 1, 2, 6, 7 ]
+          }
       , flights = "From NYC  -  ~9h to Zurich"
       , visa = "Schengen Visa or Visa-free (90 days)"
+      , suites =
+          [ { id = "swiss-chalet"
+            , name = "Alpine Valley Chalet"
+            , priceModifier = 0
+            , description = "Comfortable alpine chalet crafted from local spruce, featuring stone hearths and valley views."
+            , image = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80"
+            }
+          , { id = "swiss-lodge"
+            , name = "Matterhorn Peak Lodge"
+            , priceModifier = 555
+            , description = "Elegant mountain loft constructed with high-beamed ceilings, offering direct peaks views of the Matterhorn."
+            , image = "https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=900&q=80"
+            }
+          , { id = "swiss-penthouse"
+            , name = "Eiger Royal Penthouse"
+            , priceModifier = 1500
+            , description = "Prestigious bi-level alpine penthouse suite featuring private wellness cedar saunas, massage chambers, and a ski-in portal."
+            , image = "https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=900&q=80"
+            }
+          ]
       }
     , { id = "tokyo"
       , name = "Tokyo"
@@ -473,6 +663,26 @@ destinations =
             }
       , flights = "From NYC  -  ~14h direct"
       , visa = "Visa-free (90 days for most)"
+      , suites =
+            [ { id = "tokyo-skyline"
+              , name = "Shinjuku Skyline Room"
+              , priceModifier = 0
+              , description = "Sleek metropolitan room featuring tall glass windows offering direct views of Shinjuku's neon skyline."
+              , image = "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "tokyo-zen"
+              , name = "Zen Garden Terrace Suite"
+              , priceModifier = 300
+              , description = "Elevated traditional-meets-modern suite with an outdoor rock garden terrace and custom hinoki cypress bath."
+              , image = "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "tokyo-imperial"
+              , name = "Imperial Palace Penthouse"
+              , priceModifier = 1100
+              , description = "Sprawling top-floor luxury penthouse looking down upon the Imperial Gardens, with a private dining room."
+              , image = "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "new-york"
       , name = "New York"
@@ -508,6 +718,26 @@ destinations =
             }
       , flights = "Domestic flights from most US cities"
       , visa = "ESTA for most nationalities"
+      , suites =
+            [ { id = "ny-atelier"
+              , name = "West Village Atelier"
+              , priceModifier = 0
+              , description = "Elegantly appointed bohemian loft with exposed brick walls, fireplace, and overlooks of leafy streets."
+              , image = "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "ny-terrace"
+              , name = "Manhattan View Terrace Suite"
+              , priceModifier = 400
+              , description = "Midtown suite with private outdoor brick terrace and skyline vistas towards the Empire State Building."
+              , image = "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "ny-fifth"
+              , name = "Fifth Avenue Penthouse"
+              , priceModifier = 1300
+              , description = "Prestigious luxury residence situated high above Fifth Avenue, featuring double-height salons and private terrace gardens."
+              , image = "https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     , { id = "serengeti"
       , name = "Serengeti"
@@ -543,5 +773,25 @@ destinations =
             }
       , flights = "From NYC  -  ~18h to Kilimanjaro airport"
       , visa = "Visa on Arrival ($50 USD)"
+      , suites =
+            [ { id = "serengeti-classic"
+              , name = "Classic Tented Pavilion"
+              , priceModifier = 0
+              , description = "Spacious luxury tented villa elevated on timber decks, with mesh screens to hear the African night."
+              , image = "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "serengeti-canopy"
+              , name = "Mara River View Canopy Suite"
+              , priceModifier = 600
+              , description = "Stilted luxury suite positioned overlooking a major bend of the Mara River, optimal for wildlife viewing."
+              , image = "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80"
+              }
+            , { id = "serengeti-royal"
+              , name = "Royal Cheetah Sanctuary"
+              , priceModifier = 1500
+              , description = "Exclusive multi-tented private campsite sanctuary featuring a private plunge pool, firepit, and dedicated safari truck."
+              , image = "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=900&q=80"
+              }
+            ]
       }
     ]

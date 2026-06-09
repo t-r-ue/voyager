@@ -5230,8 +5230,12 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$initialModel = {
 	activeModalTabImage: $elm$core$Maybe$Nothing,
 	activeMood: 'all',
+	addOnHelicopter: false,
+	addOnSommelier: false,
+	addOnYacht: false,
 	bookingBarForm: {checkin: '2026-07-08', checkout: '2026-07-15', destinationId: '', guests: '2 Guests', promo: ''},
 	bookingForm: {budget: '$3,000 - $6,000', checkin: '2026-07-08', checkout: '2026-07-15', email: '', name: '', notes: '', travelers: '2'},
+	bookingStep: 1,
 	heroIndex: 0,
 	inquirySubmittedRef: $elm$core$Maybe$Nothing,
 	isTripPanelOpen: false,
@@ -5242,6 +5246,7 @@ var $author$project$Main$initialModel = {
 	newsletterJoined: false,
 	searchQuery: '',
 	selectedDetailDestId: $elm$core$Maybe$Nothing,
+	selectedSuiteId: '',
 	showAutocomplete: false,
 	submittingBooking: false,
 	submittingTripInquiry: false,
@@ -5701,6 +5706,15 @@ var $author$project$Main$CompleteTripInquiry = function (a) {
 var $author$project$Main$OpenModal = function (a) {
 	return {$: 'OpenModal', a: a};
 };
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $author$project$Data$destinations = _List_fromArray(
 	[
 		{
@@ -5735,6 +5749,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Europe',
 		reviewCount: 847,
 		shortDesc: 'Volcanic cliffs, whitewashed villages & legendary Aegean sunsets.',
+		suites: _List_fromArray(
+			[
+				{description: 'Traditional whitewashed cliffside cave suite featuring a private balcony and views of the Aegean Sea.', id: 'santorini-cave', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=80', name: 'Junior Cave Suite', priceModifier: 0},
+				{description: 'Elevated sanctuary offering dramatic unobstructed views of the volcano, complete with a private heated plunge pool.', id: 'santorini-caldera', image: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=900&q=80', name: 'Caldera View Sanctuary', priceModifier: 450},
+				{description: 'Ultra-private residence with a expansive infinity pool, outdoor lounge, and personalized 24/7 butler service.', id: 'santorini-grand', image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=80', name: 'Grand Infinity Oasis', priceModifier: 1200}
+			]),
 		tags: _List_fromArray(
 			['Island', 'Luxury', 'Sunset']),
 		visa: 'Schengen Visa or Visa-free (90 days)'
@@ -5771,6 +5791,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Asia',
 		reviewCount: 1203,
 		shortDesc: 'Sacred temples, jungle rice terraces & world-class surf.',
+		suites: _List_fromArray(
+			[
+				{description: 'Lush tropical sanctuary with private courtyard, outdoor shower, and a personal plunge pool.', id: 'bali-garden', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80', name: 'Garden Pool Villa', priceModifier: 0},
+				{description: 'Perched amongst Ubud\'s jungle canopy, offering dramatic valley views and open-air luxury living.', id: 'bali-canopy', image: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=900&q=80', name: 'Ubud Canopy Treehouse', priceModifier: 250},
+				{description: 'Stately villa situated directly on the sacred Ayung River, with private pavilion, butler service, and private spa area.', id: 'bali-palace', image: 'https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=900&q=80', name: 'Sacred Riverfront Palace', priceModifier: 750}
+			]),
 		tags: _List_fromArray(
 			['Jungle', 'Temples', 'Wellness']),
 		visa: 'Visa on Arrival (30 days, free)'
@@ -5807,6 +5833,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Indian Ocean',
 		reviewCount: 412,
 		shortDesc: 'Overwater bungalows, electric lagoons & pristine coral reefs.',
+		suites: _List_fromArray(
+			[
+				{description: 'Secluded villa steps away from the powder-white sand, surrounded by dense tropical foliage.', id: 'maldives-beach', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=80', name: 'Beachfront Retreat', priceModifier: 0},
+				{description: 'Stunning villa on stilts over the turquoise lagoon with private pool, hammock over the water, and direct lagoon access.', id: 'maldives-lagoon', image: 'https://images.unsplash.com/photo-1540202404-d0c7fe46a1cd?auto=format&fit=crop&w=900&q=80', name: 'Sunset Overwater Villa', priceModifier: 600},
+				{description: 'A standalone multi-room luxury compound with dedicated chef, private jetty, and complete isolation.', id: 'maldives-residence', image: 'https://images.unsplash.com/photo-1568171025673-b25cf3c84b7c?auto=format&fit=crop&w=900&q=80', name: 'Private Island Residence', priceModifier: 2500}
+			]),
 		tags: _List_fromArray(
 			['Overwater', 'Luxury', 'Diving']),
 		visa: 'Visa on Arrival (30 days, free)'
@@ -5843,6 +5875,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Asia',
 		reviewCount: 934,
 		shortDesc: '1,600 temples, geisha districts & bamboo groves.',
+		suites: _List_fromArray(
+			[
+				{description: 'Classic washitsu with fine tatami mats, custom screens, and view of a private rock garden.', id: 'kyoto-tatami', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80', name: 'Tatami Garden Room', priceModifier: 0},
+				{description: 'Bespoke suite featuring a private outdoor hot spring bath (onsen) surrounded by whispering bamboo.', id: 'kyoto-onsen', image: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=80', name: 'Bamboo Onsen Suite', priceModifier: 350},
+				{description: 'Spacious multi-room heritage suite reflecting royal Japanese designs and featuring private tea house garden access.', id: 'kyoto-emperor', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80', name: 'Emperor\'s Heritage Sanctuary', priceModifier: 900}
+			]),
 		tags: _List_fromArray(
 			['Temples', 'Zen', 'Sakura']),
 		visa: 'Visa-free (90 days for most)'
@@ -5879,6 +5917,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Europe',
 		reviewCount: 621,
 		shortDesc: 'Pastels, cliffs & lemon groves above the Tyrrhenian Sea.',
+		suites: _List_fromArray(
+			[
+				{description: 'Refined hillside suite with a lush private lemon garden and scenic vistas of the Amalfi coastline.', id: 'amalfi-garden', image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80', name: 'Ravello Garden Terrace', priceModifier: 0},
+				{description: 'Terraced harborfront suite positioned above Positano beach, offering sunset cocktails over active waves.', id: 'amalfi-harbor', image: 'https://images.unsplash.com/photo-1555971975-36e08d2b8e40?auto=format&fit=crop&w=900&q=80', name: 'Positano Harborfront Suite', priceModifier: 500},
+				{description: 'Our most prestigious residence, featuring a cliffside infinity pool and unhindered 360-degree panoramas of the sea.', id: 'amalfi-panoramic', image: 'https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=900&q=80', name: 'Villa d\'Este Panoramic Sanctuary', priceModifier: 1400}
+			]),
 		tags: _List_fromArray(
 			['Cliffside', 'Gastronomy', 'Boats']),
 		visa: 'Schengen Visa or Visa-free (90 days)'
@@ -5915,6 +5959,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Africa',
 		reviewCount: 783,
 		shortDesc: 'Spice souks, desert dunes & ornate palace riads.',
+		suites: _List_fromArray(
+			[
+				{description: 'Intimate ground-level riad room featuring ornate hand-carved arches and access to the central pool patio.', id: 'marrakech-riad', image: 'https://images.unsplash.com/photo-1489493585363-d69421e0edd3?auto=format&fit=crop&w=900&q=80', name: 'Medina Courtyard Riad', priceModifier: 0},
+				{description: 'Spacious second-floor suite with a private rooftop terrace and panoramic views of the Atlas Mountains.', id: 'marrakech-atlas', image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=80', name: 'Atlas View Terrace Suite', priceModifier: 200},
+				{description: 'Opulent penthouse suite adorned in zellige tilework, featuring an open fireplace and private hammam chamber.', id: 'marrakech-royal', image: 'https://images.unsplash.com/photo-1597212618440-806262de4f6b?auto=format&fit=crop&w=900&q=80', name: 'Sahara Royal Pavilion', priceModifier: 650}
+			]),
 		tags: _List_fromArray(
 			['Medina', 'Desert', 'Riads']),
 		visa: 'Visa-free (90 days for most)'
@@ -5951,6 +6001,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Europe',
 		reviewCount: 567,
 		shortDesc: 'Volcanoes, glaciers, geysers & the aurora borealis.',
+		suites: _List_fromArray(
+			[
+				{description: 'Heated geodetic glass dome enabling clear views of the aurora borealis directly from your bed.', id: 'iceland-dome', image: 'https://images.unsplash.com/photo-1474690870753-1b92efa1f2d8?auto=format&fit=crop&w=900&q=80', name: 'Aurora Glass Dome', priceModifier: 0},
+				{description: 'Rustic yet luxurious log lodge built on a volcanic ridge, featuring a outdoor geothermal hot tub.', id: 'iceland-lodge', image: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=900&q=80', name: 'Volcanic Crater Lodge', priceModifier: 300},
+				{description: 'Ultra-premium minimalist sanctuary overlooking Jökulsárlón glacier lagoon with private viewing deck.', id: 'iceland-platinum', image: 'https://images.unsplash.com/photo-1531168418791-27f0beb42e96?auto=format&fit=crop&w=900&q=80', name: 'Glacier Lagoon Platinum Suite', priceModifier: 850}
+			]),
 		tags: _List_fromArray(
 			['Aurora', 'Glaciers', 'Geothermal']),
 		visa: 'Schengen Visa or Visa-free (90 days)'
@@ -5987,6 +6043,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'South America',
 		reviewCount: 289,
 		shortDesc: 'Jagged peaks, calving glaciers & true wilderness trekking.',
+		suites: _List_fromArray(
+			[
+				{description: 'Geometric eco-dome located in primary native forests, featuring a wood-burning fireplace and skylight.', id: 'patagonia-dome', image: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=80', name: 'Forest Eco-Dome', priceModifier: 0},
+				{description: 'Luxury timber lodge built directly facing the legendary stone spires of Torres del Paine.', id: 'patagonia-lodge', image: 'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=900&q=80', name: 'Torres View Lodge', priceModifier: 350},
+				{description: 'Waterfront cabin located on isolated fjords with a private hot pool, panoramic windows, and personal Zodiac.', id: 'patagonia-signature', image: 'https://images.unsplash.com/photo-1548867530-6073a4fef69c?auto=format&fit=crop&w=900&q=80', name: 'Fjords Signature Sanctuary', priceModifier: 1000}
+			]),
 		tags: _List_fromArray(
 			['Trekking', 'Glaciers', 'Wild']),
 		visa: 'Visa-free (90 days for most)'
@@ -6023,6 +6085,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Europe',
 		reviewCount: 445,
 		shortDesc: 'Ski the Matterhorn\'s shadow across 360km of pistes.',
+		suites: _List_fromArray(
+			[
+				{description: 'Comfortable alpine chalet crafted from local spruce, featuring stone hearths and valley views.', id: 'swiss-chalet', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80', name: 'Alpine Valley Chalet', priceModifier: 0},
+				{description: 'Elegant mountain loft constructed with high-beamed ceilings, offering direct peaks views of the Matterhorn.', id: 'swiss-lodge', image: 'https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=900&q=80', name: 'Matterhorn Peak Lodge', priceModifier: 555},
+				{description: 'Prestigious bi-level alpine penthouse suite featuring private wellness cedar saunas, massage chambers, and a ski-in portal.', id: 'swiss-penthouse', image: 'https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=900&q=80', name: 'Eiger Royal Penthouse', priceModifier: 1500}
+			]),
 		tags: _List_fromArray(
 			['Skiing', 'Alpine', 'Luxury']),
 		visa: 'Schengen Visa or Visa-free (90 days)'
@@ -6059,6 +6127,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Asia',
 		reviewCount: 1089,
 		shortDesc: 'Ancient shrines, neon streets & the world\'s greatest food city.',
+		suites: _List_fromArray(
+			[
+				{description: 'Sleek metropolitan room featuring tall glass windows offering direct views of Shinjuku\'s neon skyline.', id: 'tokyo-skyline', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80', name: 'Shinjuku Skyline Room', priceModifier: 0},
+				{description: 'Elevated traditional-meets-modern suite with an outdoor rock garden terrace and custom hinoki cypress bath.', id: 'tokyo-zen', image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=80', name: 'Zen Garden Terrace Suite', priceModifier: 300},
+				{description: 'Sprawling top-floor luxury penthouse looking down upon the Imperial Gardens, with a private dining room.', id: 'tokyo-imperial', image: 'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=80', name: 'Imperial Palace Penthouse', priceModifier: 1100}
+			]),
 		tags: _List_fromArray(
 			['Neon', 'Food', 'Culture']),
 		visa: 'Visa-free (90 days for most)'
@@ -6095,6 +6169,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'North America',
 		reviewCount: 1456,
 		shortDesc: 'The city that never sleeps  -  art, food, skyline, energy.',
+		suites: _List_fromArray(
+			[
+				{description: 'Elegantly appointed bohemian loft with exposed brick walls, fireplace, and overlooks of leafy streets.', id: 'ny-atelier', image: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&w=900&q=80', name: 'West Village Atelier', priceModifier: 0},
+				{description: 'Midtown suite with private outdoor brick terrace and skyline vistas towards the Empire State Building.', id: 'ny-terrace', image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=900&q=80', name: 'Manhattan View Terrace Suite', priceModifier: 400},
+				{description: 'Prestigious luxury residence situated high above Fifth Avenue, featuring double-height salons and private terrace gardens.', id: 'ny-fifth', image: 'https://images.unsplash.com/photo-1522083165195-3424ed129620?auto=format&fit=crop&w=900&q=80', name: 'Fifth Avenue Penthouse', priceModifier: 1300}
+			]),
 		tags: _List_fromArray(
 			['Skyline', 'Art', 'Iconic']),
 		visa: 'ESTA for most nationalities'
@@ -6131,6 +6211,12 @@ var $author$project$Data$destinations = _List_fromArray(
 		region: 'Africa',
 		reviewCount: 198,
 		shortDesc: 'The Great Migration, Big Five & luxury tented camps at dawn.',
+		suites: _List_fromArray(
+			[
+				{description: 'Spacious luxury tented villa elevated on timber decks, with mesh screens to hear the African night.', id: 'serengeti-classic', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80', name: 'Classic Tented Pavilion', priceModifier: 0},
+				{description: 'Stilted luxury suite positioned overlooking a major bend of the Mara River, optimal for wildlife viewing.', id: 'serengeti-canopy', image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80', name: 'Mara River View Canopy Suite', priceModifier: 600},
+				{description: 'Exclusive multi-tented private campsite sanctuary featuring a private plunge pool, firepit, and dedicated safari truck.', id: 'serengeti-royal', image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=900&q=80', name: 'Royal Cheetah Sanctuary', priceModifier: 1500}
+			]),
 		tags: _List_fromArray(
 			['Big Five', 'Migration', 'Luxury Camp']),
 		visa: 'Visa on Arrival ($50 USD)'
@@ -6333,6 +6419,20 @@ var $author$project$Main$update = F2(
 								return _Utils_eq(d.id, destId);
 							},
 							$author$project$Data$destinations));
+					var firstSuiteId = A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						A2(
+							$elm$core$Maybe$map,
+							function ($) {
+								return $.id;
+							},
+							A2(
+								$elm$core$Maybe$andThen,
+								function (d) {
+									return $elm$core$List$head(d.suites);
+								},
+								dest)));
 					var defaultImg = A2(
 						$elm$core$Maybe$map,
 						function (d) {
@@ -6351,16 +6451,21 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								activeModalTabImage: defaultImg,
+								addOnHelicopter: false,
+								addOnSommelier: false,
+								addOnYacht: false,
 								bookingForm: updatedForm,
+								bookingStep: 1,
 								mobileNavOpen: false,
-								selectedDetailDestId: $elm$core$Maybe$Just(destId)
+								selectedDetailDestId: $elm$core$Maybe$Just(destId),
+								selectedSuiteId: firstSuiteId
 							}),
 						$elm$core$Platform$Cmd$none);
 				case 'CloseModal':
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{activeModalTabImage: $elm$core$Maybe$Nothing, selectedDetailDestId: $elm$core$Maybe$Nothing, submittingBooking: false}),
+							{activeModalTabImage: $elm$core$Maybe$Nothing, addOnHelicopter: false, addOnSommelier: false, addOnYacht: false, bookingStep: 1, selectedDetailDestId: $elm$core$Maybe$Nothing, selectedSuiteId: '', submittingBooking: false}),
 						$elm$core$Platform$Cmd$none);
 				case 'SetModalMainImage':
 					var img = msg.a;
@@ -6676,7 +6781,7 @@ var $author$project$Main$update = F2(
 								return $author$project$Main$CompleteTripInquiry('Itinerary');
 							},
 							$elm$core$Process$sleep(1500)));
-				default:
+				case 'CompleteTripInquiry':
 					var name = msg.a;
 					var refNum = 'VYG-T' + A3(
 						$elm$core$String$slice,
@@ -6692,6 +6797,83 @@ var $author$project$Main$update = F2(
 								itinerary: _List_Nil,
 								submittingTripInquiry: false
 							}),
+						$elm$core$Platform$Cmd$none);
+				case 'SelectSuite':
+					var suiteId = msg.a;
+					var dest = A2(
+						$elm$core$Maybe$andThen,
+						function (id) {
+							return $elm$core$List$head(
+								A2(
+									$elm$core$List$filter,
+									function (d) {
+										return _Utils_eq(d.id, id);
+									},
+									$author$project$Data$destinations));
+						},
+						model.selectedDetailDestId);
+					var suiteImage = A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.image;
+						},
+						A2(
+							$elm$core$Maybe$andThen,
+							function (d) {
+								return $elm$core$List$head(
+									A2(
+										$elm$core$List$filter,
+										function (s) {
+											return _Utils_eq(s.id, suiteId);
+										},
+										d.suites));
+							},
+							dest));
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								activeModalTabImage: function () {
+									if (suiteImage.$ === 'Just') {
+										var img = suiteImage.a;
+										return $elm$core$Maybe$Just(img);
+									} else {
+										return model.activeModalTabImage;
+									}
+								}(),
+								selectedSuiteId: suiteId
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'ToggleAddOn':
+					var addOnName = msg.a;
+					switch (addOnName) {
+						case 'helicopter':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addOnHelicopter: !model.addOnHelicopter}),
+								$elm$core$Platform$Cmd$none);
+						case 'yacht':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addOnYacht: !model.addOnYacht}),
+								$elm$core$Platform$Cmd$none);
+						case 'sommelier':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{addOnSommelier: !model.addOnSommelier}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				default:
+					var step = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{bookingStep: step}),
 						$elm$core$Platform$Cmd$none);
 			}
 		}
@@ -8391,7 +8573,7 @@ var $author$project$Main$renderFooter = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('© 2025 Voyager Travel Ltd. All rights reserved.')
+										$elm$html$Html$text('© 2026 Voyager Travel Ltd. All rights reserved.')
 									])),
 								A2(
 								$elm$html$Html$div,
@@ -9367,7 +9549,9 @@ var $author$project$Data$Destination = function (id) {
 																	return function (climate) {
 																		return function (flights) {
 																			return function (visa) {
-																				return {climate: climate, country: country, description: description, duration: duration, flights: flights, gallery: gallery, heroImage: heroImage, highlights: highlights, id: id, image: image, included: included, moods: moods, name: name, price: price, rating: rating, region: region, reviewCount: reviewCount, shortDesc: shortDesc, tags: tags, visa: visa};
+																				return function (suites) {
+																					return {climate: climate, country: country, description: description, duration: duration, flights: flights, gallery: gallery, heroImage: heroImage, highlights: highlights, id: id, image: image, included: included, moods: moods, name: name, price: price, rating: rating, region: region, reviewCount: reviewCount, shortDesc: shortDesc, suites: suites, tags: tags, visa: visa};
+																				};
 																			};
 																		};
 																	};
@@ -9388,11 +9572,20 @@ var $author$project$Data$Destination = function (id) {
 		};
 	};
 };
+var $author$project$Main$SelectSuite = function (a) {
+	return {$: 'SelectSuite', a: a};
+};
+var $author$project$Main$SetBookingStep = function (a) {
+	return {$: 'SetBookingStep', a: a};
+};
 var $author$project$Main$SetModalMainImage = function (a) {
 	return {$: 'SetModalMainImage', a: a};
 };
 var $author$project$Main$SubmitBookingForm = function (a) {
 	return {$: 'SubmitBookingForm', a: a};
+};
+var $author$project$Main$ToggleAddOn = function (a) {
+	return {$: 'ToggleAddOn', a: a};
 };
 var $author$project$Main$UpdateBookingFormBudget = function (a) {
 	return {$: 'UpdateBookingFormBudget', a: a};
@@ -9441,8 +9634,30 @@ var $elm$core$List$filterMap = F2(
 			xs);
 	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $author$project$Main$getSeasonMultiplier = F2(
+	function (dest, dateStr) {
+		var monthPart = A3($elm$core$String$slice, 5, 7, dateStr);
+		var monthIdx = A2(
+			$elm$core$Maybe$withDefault,
+			6,
+			A2(
+				$elm$core$Maybe$map,
+				function (m) {
+					return m - 1;
+				},
+				$elm$core$String$toInt(monthPart)));
+		return (dest.id === 'itinerary') ? 1.0 : A2(
+			$elm$core$Maybe$withDefault,
+			1.0,
+			$elm$core$List$head(
+				A2($elm$core$List$drop, monthIdx, dest.climate.price)));
+	});
+var $elm$html$Html$h4 = _VirtualDom_node('h4');
 var $elm$html$Html$hr = _VirtualDom_node('hr');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var $elm$core$Basics$round = _Basics_round;
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $author$project$Main$renderModal = function (model) {
@@ -9571,6 +9786,7 @@ var $author$project$Main$renderModal = function (model) {
 					region: 'Personalised Itinerary',
 					reviewCount: $elm$core$List$length(tripDests),
 					shortDesc: 'A custom-crafted route combining ' + (names + '.'),
+					suites: _List_Nil,
 					tags: _List_fromArray(
 						['Tailored', 'Multi-City', 'Bespoke']),
 					visa: 'Visa assistance provided for all destinations'
@@ -9581,7 +9797,7 @@ var $author$project$Main$renderModal = function (model) {
 					A2(
 						$elm$core$Maybe$withDefault,
 						$author$project$Data$Destination('')('')('')('')(_List_Nil)('')('')(_List_Nil)(0)('')(0.0)(0)(_List_Nil)('')('')(_List_Nil)(_List_Nil)(
-							A4($author$project$Data$Climate, _List_Nil, _List_Nil, _List_Nil, _List_Nil))('')(''),
+							A4($author$project$Data$Climate, _List_Nil, _List_Nil, _List_Nil, _List_Nil))('')('')(_List_Nil),
 						$elm$core$List$head($author$project$Data$destinations)),
 					$elm$core$List$head(
 						A2(
@@ -9593,7 +9809,6 @@ var $author$project$Main$renderModal = function (model) {
 			}
 		}();
 		var mainImg = A2($elm$core$Maybe$withDefault, dest.image, model.activeModalTabImage);
-		var priceCalculated = dest.price * travelersInt;
 		var renderCalendarMonth = F2(
 			function (idx, label) {
 				var priceMultiplier = A2(
@@ -9655,8 +9870,31 @@ var $author$project$Main$renderModal = function (model) {
 								]))
 						]));
 			});
+		var seasonMultiplier = A2($author$project$Main$getSeasonMultiplier, dest, model.bookingForm.checkin);
 		var starCount = $elm$core$Basics$floor(dest.rating);
 		var starStr = A2($elm$core$String$repeat, starCount, '★');
+		var suiteModifier = function () {
+			if (dest.id === 'itinerary') {
+				return 0;
+			} else {
+				var selectedSuite = $elm$core$List$head(
+					A2(
+						$elm$core$List$filter,
+						function (s) {
+							return _Utils_eq(s.id, model.selectedSuiteId);
+						},
+						dest.suites));
+				return A2(
+					$elm$core$Maybe$withDefault,
+					0,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.priceModifier;
+						},
+						selectedSuite));
+			}
+		}();
 		var thumbnailImg = F2(
 			function (idx, imgUrl) {
 				return A2(
@@ -9675,6 +9913,9 @@ var $author$project$Main$renderModal = function (model) {
 						]),
 					_List_Nil);
 			});
+		var basePrice = dest.price;
+		var addOnCost = ((model.addOnHelicopter ? 750 : 0) + (model.addOnYacht ? 1200 : 0)) + (model.addOnSommelier ? 450 : 0);
+		var priceCalculated = $elm$core$Basics$round(((basePrice + suiteModifier) * travelersInt) * seasonMultiplier) + addOnCost;
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -10091,14 +10332,127 @@ var $author$project$Main$renderModal = function (model) {
 										]),
 									_List_Nil),
 									A2(
-									$elm$html$Html$h3,
+									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('modal-booking-title')
+											$elm$html$Html$Attributes$class('booking-wizard-nav')
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('Book This Journey')
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$type_('button'),
+													$elm$html$Html$Attributes$class(
+													'wizard-nav-item' + ((model.bookingStep === 1) ? ' active' : '')),
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$SetBookingStep(1))
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-num')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('I')
+														])),
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-label')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text(
+															(dest.id === 'itinerary') ? 'Route Confirm' : 'Select Sanctuary')
+														]))
+												])),
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('wizard-nav-line')
+												]),
+											_List_Nil),
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$type_('button'),
+													$elm$html$Html$Attributes$class(
+													'wizard-nav-item' + ((model.bookingStep === 2) ? ' active' : '')),
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$SetBookingStep(2))
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-num')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('II')
+														])),
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-label')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Dates & Guests')
+														]))
+												])),
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('wizard-nav-line')
+												]),
+											_List_Nil),
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$type_('button'),
+													$elm$html$Html$Attributes$class(
+													'wizard-nav-item' + ((model.bookingStep === 3) ? ' active' : '')),
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$SetBookingStep(3))
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-num')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('III')
+														])),
+													A2(
+													$elm$html$Html$span,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('nav-label')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Concierge Curation')
+														]))
+												]))
 										])),
 									A2(
 									$elm$html$Html$form,
@@ -10111,11 +10465,11 @@ var $author$project$Main$renderModal = function (model) {
 										]),
 									_List_fromArray(
 										[
-											A2(
+											(model.bookingStep === 1) ? ((dest.id === 'itinerary') ? A2(
 											$elm$html$Html$div,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$class('form-row')
+													$elm$html$Html$Attributes$class('wizard-step-panel animate-fade')
 												]),
 											_List_fromArray(
 												[
@@ -10123,147 +10477,246 @@ var $author$project$Main$renderModal = function (model) {
 													$elm$html$Html$div,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('form-group')
+															$elm$html$Html$Attributes$class('itinerary-summary-box')
 														]),
 													_List_fromArray(
 														[
 															A2(
-															$elm$html$Html$label,
+															$elm$html$Html$p,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$for('booking-name'),
-																	$elm$html$Html$Attributes$class('form-label')
+																	$elm$html$Html$Attributes$class('itinerary-summary-title')
 																]),
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Full Name')
+																	$elm$html$Html$text('Bespoke Multi-Destination Journey')
 																])),
 															A2(
-															$elm$html$Html$input,
+															$elm$html$Html$p,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$type_('text'),
-																	$elm$html$Html$Attributes$id('booking-name'),
-																	$elm$html$Html$Attributes$class('form-input'),
-																	$elm$html$Html$Attributes$placeholder('Your name'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.name),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormName),
-																	$elm$html$Html$Attributes$required(true)
+																	$elm$html$Html$Attributes$class('itinerary-summary-desc')
 																]),
-															_List_Nil)
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('You have selected a custom route. Your dedicated travel curator will hand-design every stop, selecting five-star properties and suites tailored to your taste.')
+																])),
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('itinerary-timeline')
+																]),
+															A2(
+																$elm$core$List$indexedMap,
+																F2(
+																	function (idx, itemDestId) {
+																		var dName = A2(
+																			$elm$core$Maybe$withDefault,
+																			itemDestId,
+																			A2(
+																				$elm$core$Maybe$map,
+																				function ($) {
+																					return $.name;
+																				},
+																				$elm$core$List$head(
+																					A2(
+																						$elm$core$List$filter,
+																						function (d) {
+																							return _Utils_eq(d.id, itemDestId);
+																						},
+																						$author$project$Data$destinations))));
+																		return A2(
+																			$elm$html$Html$div,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$class('itinerary-timeline-item')
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					$elm$html$Html$span,
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$Attributes$class('timeline-dot')
+																						]),
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$text(
+																							$elm$core$String$fromInt(idx + 1))
+																						])),
+																					A2(
+																					$elm$html$Html$span,
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$Attributes$class('timeline-name')
+																						]),
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$text(dName)
+																						]))
+																				]));
+																	}),
+																model.itinerary))
 														])),
 													A2(
 													$elm$html$Html$div,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('form-group')
+															$elm$html$Html$Attributes$class('wizard-actions')
 														]),
 													_List_fromArray(
 														[
 															A2(
-															$elm$html$Html$label,
+															$elm$html$Html$button,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$for('booking-email'),
-																	$elm$html$Html$Attributes$class('form-label')
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class('btn-wizard-next'),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$SetBookingStep(2))
 																]),
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Email')
-																])),
-															A2(
-															$elm$html$Html$input,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$type_('email'),
-																	$elm$html$Html$Attributes$id('booking-email'),
-																	$elm$html$Html$Attributes$class('form-input'),
-																	$elm$html$Html$Attributes$placeholder('you@email.com'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.email),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormEmail),
-																	$elm$html$Html$Attributes$required(true)
-																]),
-															_List_Nil)
+																	$elm$html$Html$text('Continue to Dates & Guests ➔')
+																]))
 														]))
-												])),
-											A2(
+												])) : A2(
 											$elm$html$Html$div,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$class('form-row')
+													$elm$html$Html$Attributes$class('wizard-step-panel animate-fade')
 												]),
 											_List_fromArray(
 												[
 													A2(
-													$elm$html$Html$div,
+													$elm$html$Html$p,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('form-group')
+															$elm$html$Html$Attributes$class('step-helper-text')
 														]),
 													_List_fromArray(
 														[
-															A2(
-															$elm$html$Html$label,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$for('booking-checkin'),
-																	$elm$html$Html$Attributes$class('form-label')
-																]),
-															_List_fromArray(
-																[
-																	$elm$html$Html$text('Arrival')
-																])),
-															A2(
-															$elm$html$Html$input,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$type_('date'),
-																	$elm$html$Html$Attributes$id('booking-checkin'),
-																	$elm$html$Html$Attributes$class('form-input'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.checkin),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormCheckin),
-																	$elm$html$Html$Attributes$required(true)
-																]),
-															_List_Nil)
+															$elm$html$Html$text('Select your preferred suite type. Rates scale by room grade.')
 														])),
 													A2(
 													$elm$html$Html$div,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('form-group')
+															$elm$html$Html$Attributes$class('suite-grid')
+														]),
+													A2(
+														$elm$core$List$map,
+														function (suite) {
+															return A2(
+																$elm$html$Html$button,
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$type_('button'),
+																		$elm$html$Html$Attributes$class(
+																		'suite-card' + (_Utils_eq(model.selectedSuiteId, suite.id) ? ' active' : '')),
+																		$elm$html$Html$Events$onClick(
+																		$author$project$Main$SelectSuite(suite.id))
+																	]),
+																_List_fromArray(
+																	[
+																		A2(
+																		$elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$Attributes$class('suite-card-img-wrap')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				$elm$html$Html$img,
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$Attributes$class('suite-card-img'),
+																						$elm$html$Html$Attributes$src(suite.image),
+																						$elm$html$Html$Attributes$alt(suite.name)
+																					]),
+																				_List_Nil)
+																			])),
+																		A2(
+																		$elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$Attributes$class('suite-card-body')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$Attributes$class('suite-card-header')
+																					]),
+																				_List_fromArray(
+																					[
+																						A2(
+																						$elm$html$Html$h4,
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$Attributes$class('suite-card-name')
+																							]),
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$text(suite.name)
+																							])),
+																						A2(
+																						$elm$html$Html$span,
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$Attributes$class('suite-card-modifier')
+																							]),
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$text(
+																								(!suite.priceModifier) ? 'Included' : ('+' + ('$' + ($elm$core$String$fromInt(suite.priceModifier) + ' / night'))))
+																							]))
+																					])),
+																				A2(
+																				$elm$html$Html$p,
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$Attributes$class('suite-card-desc')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(suite.description)
+																					]))
+																			]))
+																	]));
+														},
+														dest.suites)),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('wizard-actions')
 														]),
 													_List_fromArray(
 														[
 															A2(
-															$elm$html$Html$label,
+															$elm$html$Html$button,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$for('booking-checkout'),
-																	$elm$html$Html$Attributes$class('form-label')
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class('btn-wizard-next'),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$SetBookingStep(2))
 																]),
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Departure')
-																])),
-															A2(
-															$elm$html$Html$input,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$type_('date'),
-																	$elm$html$Html$Attributes$id('booking-checkout'),
-																	$elm$html$Html$Attributes$class('form-input'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.checkout),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormCheckout),
-																	$elm$html$Html$Attributes$required(true)
-																]),
-															_List_Nil)
+																	$elm$html$Html$text('Continue to Dates & Guests ➔')
+																]))
 														]))
-												])),
-											A2(
+												]))) : ((model.bookingStep === 2) ? A2(
 											$elm$html$Html$div,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$class('form-row')
+													$elm$html$Html$Attributes$class('wizard-step-panel animate-fade')
 												]),
 											_List_fromArray(
 												[
@@ -10271,72 +10724,530 @@ var $author$project$Main$renderModal = function (model) {
 													$elm$html$Html$div,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('form-group')
+															$elm$html$Html$Attributes$class('form-row')
 														]),
 													_List_fromArray(
 														[
 															A2(
-															$elm$html$Html$label,
+															$elm$html$Html$div,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$for('booking-travelers'),
-																	$elm$html$Html$Attributes$class('form-label')
+																	$elm$html$Html$Attributes$class('form-group')
 																]),
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Travelers')
+																	A2(
+																	$elm$html$Html$label,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$for('booking-checkin'),
+																			$elm$html$Html$Attributes$class('form-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Arrival Date')
+																		])),
+																	A2(
+																	$elm$html$Html$input,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$type_('date'),
+																			$elm$html$Html$Attributes$id('booking-checkin'),
+																			$elm$html$Html$Attributes$class('form-input'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.checkin),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormCheckin),
+																			$elm$html$Html$Attributes$required(true)
+																		]),
+																	_List_Nil)
 																])),
 															A2(
-															$elm$html$Html$select,
+															$elm$html$Html$div,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$id('booking-travelers'),
-																	$elm$html$Html$Attributes$class('form-select'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.travelers),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormTravelers)
+																	$elm$html$Html$Attributes$class('form-group')
 																]),
 															_List_fromArray(
 																[
 																	A2(
-																	$elm$html$Html$option,
+																	$elm$html$Html$label,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$Attributes$value('1')
+																			$elm$html$Html$Attributes$for('booking-checkout'),
+																			$elm$html$Html$Attributes$class('form-label')
 																		]),
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$text('1 traveler')
+																			$elm$html$Html$text('Departure Date')
 																		])),
 																	A2(
-																	$elm$html$Html$option,
+																	$elm$html$Html$input,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$Attributes$value('2')
+																			$elm$html$Html$Attributes$type_('date'),
+																			$elm$html$Html$Attributes$id('booking-checkout'),
+																			$elm$html$Html$Attributes$class('form-input'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.checkout),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormCheckout),
+																			$elm$html$Html$Attributes$required(true)
+																		]),
+																	_List_Nil)
+																]))
+														])),
+													function () {
+													if (_Utils_cmp(model.bookingForm.checkin, model.bookingForm.checkout) > -1) {
+														return A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('date-warning')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('✦ Departure date must be after arrival date')
+																]));
+													} else {
+														var pct = $elm$core$Basics$round((seasonMultiplier - 1.0) * 100.0);
+														return (pct > 15) ? A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('season-badge peak')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text(
+																	'✦ Peak Season Rates Apply (+' + ($elm$core$String$fromInt(pct) + '% for selected month)'))
+																])) : ((_Utils_cmp(pct, -15) < 0) ? A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('season-badge value')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text(
+																	'✦ Value Season Rates Apply (' + ($elm$core$String$fromInt(pct) + '% for selected month)'))
+																])) : A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('season-badge standard')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('✦ Standard Season Rates Apply')
+																])));
+													}
+												}(),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('form-row'),
+															A2($elm$html$Html$Attributes$style, 'margin-top', '16px')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('form-group')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$label,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$for('booking-travelers'),
+																			$elm$html$Html$Attributes$class('form-label')
 																		]),
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$text('2 travelers')
+																			$elm$html$Html$text('Travelers')
 																		])),
 																	A2(
-																	$elm$html$Html$option,
+																	$elm$html$Html$select,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$Attributes$value('3')
+																			$elm$html$Html$Attributes$id('booking-travelers'),
+																			$elm$html$Html$Attributes$class('form-select'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.travelers),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormTravelers)
 																		]),
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$text('3 travelers')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$Attributes$value('4')
-																		]),
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('4+ travelers')
+																			A2(
+																			$elm$html$Html$option,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$value('1')
+																				]),
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('1 traveler')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$value('2')
+																				]),
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('2 travelers')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$value('3')
+																				]),
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('3 travelers')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$value('4')
+																				]),
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('4+ travelers')
+																				]))
 																		]))
+																])),
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('form-group')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$label,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$for('booking-budget'),
+																			$elm$html$Html$Attributes$class('form-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Budget Range')
+																		])),
+																	A2(
+																	$elm$html$Html$select,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$id('booking-budget'),
+																			$elm$html$Html$Attributes$class('form-select'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.budget),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormBudget)
+																		]),
+																	_List_fromArray(
+																		[
+																			A2(
+																			$elm$html$Html$option,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('Under $3,000')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('$3,000 - $6,000')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('$6,000 - $10,000')
+																				])),
+																			A2(
+																			$elm$html$Html$option,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$text('$10,000+')
+																				]))
+																		]))
+																]))
+														])),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('wizard-actions')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class('btn-wizard-prev'),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$SetBookingStep(1))
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('⮨ Select Sanctuary')
+																])),
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class('btn-wizard-next'),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$SetBookingStep(3)),
+																	$elm$html$Html$Attributes$disabled(
+																	_Utils_cmp(model.bookingForm.checkin, model.bookingForm.checkout) > -1)
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text('Continue to Curation ➔')
+																]))
+														]))
+												])) : A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('wizard-step-panel animate-fade')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$p,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('step-helper-text')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Enhance your escape with bespoke curator additions.')
+														])),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('addon-grid')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class(
+																	'addon-card' + (model.addOnHelicopter ? ' active' : '')),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$ToggleAddOn('helicopter'))
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-badge')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('+$750')
+																		])),
+																	A2(
+																	$elm$html$Html$h4,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-name')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Heli-Transfer')
+																		])),
+																	A2(
+																	$elm$html$Html$p,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-desc')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Arrive directly to the resort landing pad via private charter.')
+																		]))
+																])),
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class(
+																	'addon-card' + (model.addOnYacht ? ' active' : '')),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$ToggleAddOn('yacht'))
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-badge')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('+$1,200')
+																		])),
+																	A2(
+																	$elm$html$Html$h4,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-name')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Yacht Excursion')
+																		])),
+																	A2(
+																	$elm$html$Html$p,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-desc')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Four-hour private cruise with custom sommelier and dining onboard.')
+																		]))
+																])),
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class(
+																	'addon-card' + (model.addOnSommelier ? ' active' : '')),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$ToggleAddOn('sommelier'))
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-badge')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('+$450')
+																		])),
+																	A2(
+																	$elm$html$Html$h4,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-name')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('In-Villa Cellar')
+																		])),
+																	A2(
+																	$elm$html$Html$p,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('addon-desc')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Sommelier-stocked local vintage cabinet refreshed daily.')
+																		]))
+																]))
+														])),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('form-row'),
+															A2($elm$html$Html$Attributes$style, 'margin-top', '24px')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('form-group')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$label,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$for('booking-name'),
+																			$elm$html$Html$Attributes$class('form-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Full Name')
+																		])),
+																	A2(
+																	$elm$html$Html$input,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$type_('text'),
+																			$elm$html$Html$Attributes$id('booking-name'),
+																			$elm$html$Html$Attributes$class('form-input'),
+																			$elm$html$Html$Attributes$placeholder('Your name'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.name),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormName),
+																			$elm$html$Html$Attributes$required(true)
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('form-group')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$label,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$for('booking-email'),
+																			$elm$html$Html$Attributes$class('form-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Email')
+																		])),
+																	A2(
+																	$elm$html$Html$input,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$type_('email'),
+																			$elm$html$Html$Attributes$id('booking-email'),
+																			$elm$html$Html$Attributes$class('form-input'),
+																			$elm$html$Html$Attributes$placeholder('you@email.com'),
+																			$elm$html$Html$Attributes$value(model.bookingForm.email),
+																			$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormEmail),
+																			$elm$html$Html$Attributes$required(true)
+																		]),
+																	_List_Nil)
 																]))
 														])),
 													A2(
@@ -10351,86 +11262,114 @@ var $author$project$Main$renderModal = function (model) {
 															$elm$html$Html$label,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$for('booking-budget'),
+																	$elm$html$Html$Attributes$for('booking-notes'),
 																	$elm$html$Html$Attributes$class('form-label')
 																]),
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Budget Range')
+																	$elm$html$Html$text('Special Requests')
 																])),
 															A2(
-															$elm$html$Html$select,
+															$elm$html$Html$textarea,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$id('booking-budget'),
-																	$elm$html$Html$Attributes$class('form-select'),
-																	$elm$html$Html$Attributes$value(model.bookingForm.budget),
-																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormBudget)
+																	$elm$html$Html$Attributes$id('booking-notes'),
+																	$elm$html$Html$Attributes$class('form-textarea'),
+																	$elm$html$Html$Attributes$placeholder('Dietary requests, room adjustments, honeymoon notes...'),
+																	$elm$html$Html$Attributes$value(model.bookingForm.notes),
+																	$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormNotes)
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('wizard-actions')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('button'),
+																	$elm$html$Html$Attributes$class('btn-wizard-prev'),
+																	$elm$html$Html$Events$onClick(
+																	$author$project$Main$SetBookingStep(2))
 																]),
 															_List_fromArray(
 																[
-																	A2(
-																	$elm$html$Html$option,
+																	$elm$html$Html$text('⮨ Dates & Guests')
+																])),
+															A2(
+															$elm$html$Html$button,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$type_('submit'),
+																	$elm$html$Html$Attributes$class('btn-book'),
+																	$elm$html$Html$Attributes$id('booking-submit-btn'),
+																	$elm$html$Html$Attributes$disabled(model.submittingBooking)
+																]),
+															_List_fromArray(
+																[
+																	model.submittingBooking ? A2(
+																	$elm$html$Html$span,
 																	_List_Nil,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$text('Under $3,000')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
+																			A2(
+																			$elm$html$Html$span,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$class('spinner')
+																				]),
+																			_List_Nil),
+																			$elm$html$Html$text(' Sending…')
+																		])) : A2(
+																	$elm$html$Html$span,
 																	_List_Nil,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$text('$3,000 - $6,000')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('$6,000 - $10,000')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('$10,000+')
+																			$elm$html$Html$text('Send Inquiry '),
+																			A3(
+																			$elm$html$Html$node,
+																			'svg',
+																			_List_fromArray(
+																				[
+																					A2($elm$html$Html$Attributes$attribute, 'width', '14'),
+																					A2($elm$html$Html$Attributes$attribute, 'height', '14'),
+																					A2($elm$html$Html$Attributes$attribute, 'viewBox', '0 0 24 24'),
+																					A2($elm$html$Html$Attributes$attribute, 'fill', 'none'),
+																					A2($elm$html$Html$Attributes$attribute, 'stroke', 'currentColor'),
+																					A2($elm$html$Html$Attributes$attribute, 'stroke-width', '2')
+																				]),
+																			_List_fromArray(
+																				[
+																					A3(
+																					$elm$html$Html$node,
+																					'line',
+																					_List_fromArray(
+																						[
+																							A2($elm$html$Html$Attributes$attribute, 'x1', '5'),
+																							A2($elm$html$Html$Attributes$attribute, 'y1', '12'),
+																							A2($elm$html$Html$Attributes$attribute, 'x2', '19'),
+																							A2($elm$html$Html$Attributes$attribute, 'y2', '12')
+																						]),
+																					_List_Nil),
+																					A3(
+																					$elm$html$Html$node,
+																					'polyline',
+																					_List_fromArray(
+																						[
+																							A2($elm$html$Html$Attributes$attribute, 'points', '12,5 19,12 12,19')
+																						]),
+																					_List_Nil)
+																				]))
 																		]))
 																]))
 														]))
-												])),
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('form-group')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$for('booking-notes'),
-															$elm$html$Html$Attributes$class('form-label')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Special Requests')
-														])),
-													A2(
-													$elm$html$Html$textarea,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$id('booking-notes'),
-															$elm$html$Html$Attributes$class('form-textarea'),
-															$elm$html$Html$Attributes$placeholder('Honeymoon, anniversary, dietary needs…'),
-															$elm$html$Html$Attributes$value(model.bookingForm.notes),
-															$elm$html$Html$Events$onInput($author$project$Main$UpdateBookingFormNotes)
-														]),
-													_List_Nil)
-												])),
+												]))),
 											A2(
 											$elm$html$Html$div,
 											_List_fromArray(
@@ -10440,109 +11379,230 @@ var $author$project$Main$renderModal = function (model) {
 											_List_fromArray(
 												[
 													A2(
+													$elm$html$Html$p,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('price-summary-title')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Inquiry Calculation Formula')
+														])),
+													A2(
 													$elm$html$Html$div,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$class('modal-price-block')
+															$elm$html$Html$Attributes$class('price-summary-table')
 														]),
 													_List_fromArray(
 														[
 															A2(
-															$elm$html$Html$p,
+															$elm$html$Html$div,
 															_List_fromArray(
 																[
-																	$elm$html$Html$Attributes$class('price-from')
+																	$elm$html$Html$Attributes$class('price-summary-row')
 																]),
-															_List_fromArray(
-																[
-																	$elm$html$Html$text('Estimated Cost')
-																])),
-															A2(
-															$elm$html$Html$p,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$class('price-amount')
-																]),
-															_List_fromArray(
-																[
-																	$elm$html$Html$text(
-																	'$' + $elm$core$String$fromInt(priceCalculated))
-																])),
-															A2(
-															$elm$html$Html$p,
-															_List_fromArray(
-																[
-																	$elm$html$Html$Attributes$class('price-duration')
-																]),
-															_List_fromArray(
-																[
-																	$elm$html$Html$text('for ' + (model.bookingForm.travelers + (' people · ' + dest.duration)))
-																]))
-														])),
-													A2(
-													$elm$html$Html$button,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$type_('submit'),
-															$elm$html$Html$Attributes$class('btn-book'),
-															$elm$html$Html$Attributes$id('booking-submit-btn'),
-															$elm$html$Html$Attributes$disabled(model.submittingBooking)
-														]),
-													_List_fromArray(
-														[
-															model.submittingBooking ? A2(
-															$elm$html$Html$span,
-															_List_Nil,
 															_List_fromArray(
 																[
 																	A2(
 																	$elm$html$Html$span,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$Attributes$class('spinner')
+																			$elm$html$Html$Attributes$class('formula-label')
 																		]),
-																	_List_Nil),
-																	$elm$html$Html$text(' Sending…')
-																])) : A2(
-															$elm$html$Html$span,
-															_List_Nil,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			(dest.id === 'itinerary') ? 'Itinerary Combined Rate' : 'Sanctuary Base Rate')
+																		])),
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-value')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'$' + $elm$core$String$fromInt(basePrice))
+																		]))
+																])),
+															((dest.id !== 'itinerary') && (suiteModifier > 0)) ? A2(
+															$elm$html$Html$div,
 															_List_fromArray(
 																[
-																	$elm$html$Html$text('Send Inquiry '),
-																	A3(
-																	$elm$html$Html$node,
-																	'svg',
+																	$elm$html$Html$Attributes$class('price-summary-row')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
 																	_List_fromArray(
 																		[
-																			A2($elm$html$Html$Attributes$attribute, 'width', '14'),
-																			A2($elm$html$Html$Attributes$attribute, 'height', '14'),
-																			A2($elm$html$Html$Attributes$attribute, 'viewBox', '0 0 24 24'),
-																			A2($elm$html$Html$Attributes$attribute, 'fill', 'none'),
-																			A2($elm$html$Html$Attributes$attribute, 'stroke', 'currentColor'),
-																			A2($elm$html$Html$Attributes$attribute, 'stroke-width', '2')
+																			$elm$html$Html$Attributes$class('formula-label')
 																		]),
 																	_List_fromArray(
 																		[
-																			A3(
-																			$elm$html$Html$node,
-																			'line',
-																			_List_fromArray(
-																				[
-																					A2($elm$html$Html$Attributes$attribute, 'x1', '5'),
-																					A2($elm$html$Html$Attributes$attribute, 'y1', '12'),
-																					A2($elm$html$Html$Attributes$attribute, 'x2', '19'),
-																					A2($elm$html$Html$Attributes$attribute, 'y2', '12')
-																				]),
-																			_List_Nil),
-																			A3(
-																			$elm$html$Html$node,
-																			'polyline',
-																			_List_fromArray(
-																				[
-																					A2($elm$html$Html$Attributes$attribute, 'points', '12,5 19,12 12,19')
-																				]),
-																			_List_Nil)
+																			$elm$html$Html$text('Suite Level Upgrade')
+																		])),
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-value')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'+ $' + $elm$core$String$fromInt(suiteModifier))
 																		]))
+																])) : $elm$html$Html$text(''),
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('price-summary-row')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Travelers Multiplier')
+																		])),
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-value')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'× ' + $elm$core$String$fromInt(travelersInt))
+																		]))
+																])),
+															((dest.id !== 'itinerary') && (seasonMultiplier !== 1.0)) ? A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('price-summary-row')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Seasonal Factor')
+																		])),
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-value')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'× ' + $elm$core$String$fromFloat(seasonMultiplier))
+																		]))
+																])) : $elm$html$Html$text(''),
+															(addOnCost > 0) ? A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('price-summary-row')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Curator Add-ons')
+																		])),
+																	A2(
+																	$elm$html$Html$span,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('formula-value')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'+ $' + $elm$core$String$fromInt(addOnCost))
+																		]))
+																])) : $elm$html$Html$text('')
+														])),
+													A2(
+													$elm$html$Html$hr,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('summary-break-line')
+														]),
+													_List_Nil),
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('price-total-row')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$div,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('price-total-text')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$p,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('total-label')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text('Estimated Cost')
+																		])),
+																	A2(
+																	$elm$html$Html$p,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$class('total-sublabel')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(
+																			'for ' + ($elm$core$String$fromInt(travelersInt) + (' guests · ' + dest.duration)))
+																		]))
+																])),
+															A2(
+															$elm$html$Html$p,
+															_List_fromArray(
+																[
+																	$elm$html$Html$Attributes$class('total-amount')
+																]),
+															_List_fromArray(
+																[
+																	$elm$html$Html$text(
+																	'$' + $elm$core$String$fromInt(priceCalculated))
 																]))
 														]))
 												]))

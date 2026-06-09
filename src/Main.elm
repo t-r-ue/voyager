@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Data exposing (Climate, Destination, HeroSlide, InsiderPick, Review, destinations, heroSlides, insiderPick, reviews)
+import Data exposing (Climate, Destination, HeroSlide, InsiderPick, Review, Suite, destinations, heroSlides, insiderPick, reviews)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -49,6 +49,11 @@ type alias Model =
     , toast : Maybe String
     , submittingBooking : Bool
     , submittingTripInquiry : Bool
+    , selectedSuiteId : String
+    , addOnHelicopter : Bool
+    , addOnYacht : Bool
+    , addOnSommelier : Bool
+    , bookingStep : Int
     }
 
 
@@ -86,6 +91,11 @@ initialModel =
     , toast = Nothing
     , submittingBooking = False
     , submittingTripInquiry = False
+    , selectedSuiteId = ""
+    , addOnHelicopter = False
+    , addOnYacht = False
+    , addOnSommelier = False
+    , bookingStep = 1
     }
 
 
@@ -128,6 +138,9 @@ type Msg
     | HideToast
     | SubmitTripInquiry
     | CompleteTripInquiry String
+    | SelectSuite String
+    | ToggleAddOn String
+    | SetBookingStep Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -195,18 +208,40 @@ update msg model =
 
                 updatedForm =
                     { currentForm | checkin = model.bookingBarForm.checkin, checkout = model.bookingBarForm.checkout }
+
+                firstSuiteId =
+                    dest
+                        |> Maybe.andThen (\d -> List.head d.suites)
+                        |> Maybe.map .id
+                        |> Maybe.withDefault ""
             in
             ( { model
                 | selectedDetailDestId = Just destId
                 , activeModalTabImage = defaultImg
                 , bookingForm = updatedForm
                 , mobileNavOpen = False
+                , selectedSuiteId = firstSuiteId
+                , addOnHelicopter = False
+                , addOnYacht = False
+                , addOnSommelier = False
+                , bookingStep = 1
               }
             , Cmd.none
             )
 
         CloseModal ->
-            ( { model | selectedDetailDestId = Nothing, activeModalTabImage = Nothing, submittingBooking = False }, Cmd.none )
+            ( { model
+                | selectedDetailDestId = Nothing
+                , activeModalTabImage = Nothing
+                , submittingBooking = False
+                , selectedSuiteId = ""
+                , addOnHelicopter = False
+                , addOnYacht = False
+                , addOnSommelier = False
+                , bookingStep = 1
+              }
+            , Cmd.none
+            )
 
         SetModalMainImage img ->
             ( { model | activeModalTabImage = Just img }, Cmd.none )
@@ -466,6 +501,43 @@ update msg model =
               }
             , Cmd.none
             )
+
+        SelectSuite suiteId ->
+            let
+                dest =
+                    model.selectedDetailDestId
+                        |> Maybe.andThen (\id -> List.filter (\d -> d.id == id) destinations |> List.head)
+
+                suiteImage =
+                    dest
+                        |> Maybe.andThen (\d -> List.filter (\s -> s.id == suiteId) d.suites |> List.head)
+                        |> Maybe.map .image
+            in
+            ( { model
+                | selectedSuiteId = suiteId
+                , activeModalTabImage = case suiteImage of
+                                            Just img -> Just img
+                                            Nothing -> model.activeModalTabImage
+              }
+            , Cmd.none
+            )
+
+        ToggleAddOn addOnName ->
+            case addOnName of
+                "helicopter" ->
+                    ( { model | addOnHelicopter = not model.addOnHelicopter }, Cmd.none )
+
+                "yacht" ->
+                    ( { model | addOnYacht = not model.addOnYacht }, Cmd.none )
+
+                "sommelier" ->
+                    ( { model | addOnSommelier = not model.addOnSommelier }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        SetBookingStep step ->
+            ( { model | bookingStep = step }, Cmd.none )
 
 
 triggerToastCmd : String -> Cmd Msg
@@ -1236,12 +1308,13 @@ renderModal model =
                         , climate = { temps = [], labels = [], price = [], best = [] }
                         , flights = "Custom flight planning included"
                         , visa = "Visa assistance provided for all destinations"
+                        , suites = []
                         }
 
                     else
                         List.filter (\d -> d.id == destId) destinations
                             |> List.head
-                            |> Maybe.withDefault (List.head destinations |> Maybe.withDefault (Destination "" "" "" "" [] "" "" [] 0 "" 0.0 0 [] "" "" [] [] (Climate [] [] [] []) "" ""))
+                            |> Maybe.withDefault (List.head destinations |> Maybe.withDefault (Destination "" "" "" "" [] "" "" [] 0 "" 0.0 0 [] "" "" [] [] (Climate [] [] [] []) "" "" []))
 
                 mainImg =
                     model.activeModalTabImage |> Maybe.withDefault dest.image
@@ -1301,11 +1374,34 @@ renderModal model =
                         , div [ class "calendar-month-label" ] [ text label ]
                         ]
 
+                -- Math values for cost calculation
                 travelersInt =
                     String.toInt model.bookingForm.travelers |> Maybe.withDefault 2
 
+                basePrice =
+                    dest.price
+
+                suiteModifier =
+                    if dest.id == "itinerary" then
+                        0
+
+                    else
+                        let
+                            selectedSuite =
+                                List.filter (\s -> s.id == model.selectedSuiteId) dest.suites |> List.head
+                        in
+                        selectedSuite |> Maybe.map .priceModifier |> Maybe.withDefault 0
+
+                seasonMultiplier =
+                    getSeasonMultiplier dest model.bookingForm.checkin
+
+                addOnCost =
+                    (if model.addOnHelicopter then 750 else 0)
+                        + (if model.addOnYacht then 1200 else 0)
+                        + (if model.addOnSommelier then 450 else 0)
+
                 priceCalculated =
-                    dest.price * travelersInt
+                    round (toFloat ((basePrice + suiteModifier) * travelersInt) * seasonMultiplier) + addOnCost
             in
             div [ id "dest-modal", class "open", role "dialog", ariaModal True ]
                 [ div [ class "modal-backdrop open", id "modal-backdrop", onClick CloseModal ] []
@@ -1359,83 +1455,311 @@ renderModal model =
                             , div [ class "modal-info-item" ] [ p [ class "modal-info-label" ] [ text "Visa" ], p [ class "modal-info-value" ] [ text dest.visa ] ]
                             ]
                         , hr [ class "modal-booking-divider" ] []
-                        , h3 [ class "modal-booking-title" ] [ text "Book This Journey" ]
+                        
+                        -- Wizard Navigation Headers
+                        , div [ class "booking-wizard-nav" ]
+                            [ button
+                                [ type_ "button"
+                                , class ("wizard-nav-item" ++ (if model.bookingStep == 1 then " active" else ""))
+                                , onClick (SetBookingStep 1)
+                                ]
+                                [ span [ class "nav-num" ] [ text "I" ]
+                                , span [ class "nav-label" ] [ text (if dest.id == "itinerary" then "Route Confirm" else "Select Sanctuary") ]
+                                ]
+                            , div [ class "wizard-nav-line" ] []
+                            , button
+                                [ type_ "button"
+                                , class ("wizard-nav-item" ++ (if model.bookingStep == 2 then " active" else ""))
+                                , onClick (SetBookingStep 2)
+                                ]
+                                [ span [ class "nav-num" ] [ text "II" ]
+                                , span [ class "nav-label" ] [ text "Dates & Guests" ]
+                                ]
+                            , div [ class "wizard-nav-line" ] []
+                            , button
+                                [ type_ "button"
+                                , class ("wizard-nav-item" ++ (if model.bookingStep == 3 then " active" else ""))
+                                , onClick (SetBookingStep 3)
+                                ]
+                                [ span [ class "nav-num" ] [ text "III" ]
+                                , span [ class "nav-label" ] [ text "Concierge Curation" ]
+                                ]
+                            ]
+
                         , Html.form [ class "booking-form", id "booking-form", onSubmit (SubmitBookingForm dest.id) ]
-                            [ div [ class "form-row" ]
-                                [ div [ class "form-group" ]
-                                    [ label [ for "booking-name", class "form-label" ] [ text "Full Name" ]
-                                    , input [ type_ "text", id "booking-name", class "form-input", placeholder "Your name", value model.bookingForm.name, onInput UpdateBookingFormName, required True ] []
-                                    ]
-                                , div [ class "form-group" ]
-                                    [ label [ for "booking-email", class "form-label" ] [ text "Email" ]
-                                    , input [ type_ "email", id "booking-email", class "form-input", placeholder "you@email.com", value model.bookingForm.email, onInput UpdateBookingFormEmail, required True ] []
-                                    ]
-                                ]
-                            , div [ class "form-row" ]
-                                [ div [ class "form-group" ]
-                                    [ label [ for "booking-checkin", class "form-label" ] [ text "Arrival" ]
-                                    , input [ type_ "date", id "booking-checkin", class "form-input", value model.bookingForm.checkin, onInput UpdateBookingFormCheckin, required True ] []
-                                    ]
-                                , div [ class "form-group" ]
-                                    [ label [ for "booking-checkout", class "form-label" ] [ text "Departure" ]
-                                    , input [ type_ "date", id "booking-checkout", class "form-input", value model.bookingForm.checkout, onInput UpdateBookingFormCheckout, required True ] []
-                                    ]
-                                ]
-                            , div [ class "form-row" ]
-                                [ div [ class "form-group" ]
-                                    [ label [ for "booking-travelers", class "form-label" ] [ text "Travelers" ]
-                                    , select [ id "booking-travelers", class "form-select", value model.bookingForm.travelers, onInput UpdateBookingFormTravelers ]
-                                        [ option [ value "1" ] [ text "1 traveler" ]
-                                        , option [ value "2" ] [ text "2 travelers" ]
-                                        , option [ value "3" ] [ text "3 travelers" ]
-                                        , option [ value "4" ] [ text "4+ travelers" ]
+                            [ -- STEP 1: Sanctuary/Suite Select
+                              if model.bookingStep == 1 then
+                                if dest.id == "itinerary" then
+                                    div [ class "wizard-step-panel animate-fade" ]
+                                        [ div [ class "itinerary-summary-box" ]
+                                            [ p [ class "itinerary-summary-title" ] [ text "Bespoke Multi-Destination Journey" ]
+                                            , p [ class "itinerary-summary-desc" ] [ text "You have selected a custom route. Your dedicated travel curator will hand-design every stop, selecting five-star properties and suites tailored to your taste." ]
+                                            , div [ class "itinerary-timeline" ]
+                                                (List.indexedMap
+                                                    (\idx itemDestId ->
+                                                        let
+                                                            dName =
+                                                                List.filter (\d -> d.id == itemDestId) destinations
+                                                                    |> List.head
+                                                                    |> Maybe.map .name
+                                                                    |> Maybe.withDefault itemDestId
+                                                        in
+                                                        div [ class "itinerary-timeline-item" ]
+                                                            [ span [ class "timeline-dot" ] [ text (String.fromInt (idx + 1)) ]
+                                                            , span [ class "timeline-name" ] [ text dName ]
+                                                            ]
+                                                    )
+                                                    model.itinerary
+                                                )
+                                            ]
+                                        , div [ class "wizard-actions" ]
+                                            [ button [ type_ "button", class "btn-wizard-next", onClick (SetBookingStep 2) ] [ text "Continue to Dates & Guests ➔" ]
+                                            ]
                                         ]
-                                    ]
-                                , div [ class "form-group" ]
-                                    [ label [ for "booking-budget", class "form-label" ] [ text "Budget Range" ]
-                                    , select [ id "booking-budget", class "form-select", value model.bookingForm.budget, onInput UpdateBookingFormBudget ]
-                                        [ option [] [ text "Under $3,000" ]
-                                        , option [] [ text "$3,000 - $6,000" ]
-                                        , option [] [ text "$6,000 - $10,000" ]
-                                        , option [] [ text "$10,000+" ]
+
+                                else
+                                    div [ class "wizard-step-panel animate-fade" ]
+                                        [ p [ class "step-helper-text" ] [ text "Select your preferred suite type. Rates scale by room grade." ]
+                                        , div [ class "suite-grid" ]
+                                            (List.map
+                                                (\suite ->
+                                                    button
+                                                        [ type_ "button"
+                                                        , class ("suite-card" ++ (if model.selectedSuiteId == suite.id then " active" else ""))
+                                                        , onClick (SelectSuite suite.id)
+                                                        ]
+                                                        [ div [ class "suite-card-img-wrap" ]
+                                                            [ img [ class "suite-card-img", src suite.image, alt suite.name ] []
+                                                            ]
+                                                        , div [ class "suite-card-body" ]
+                                                            [ div [ class "suite-card-header" ]
+                                                                [ h4 [ class "suite-card-name" ] [ text suite.name ]
+                                                                , span [ class "suite-card-modifier" ]
+                                                                    [ text
+                                                                        (if suite.priceModifier == 0 then
+                                                                            "Included"
+
+                                                                         else
+                                                                            "+" ++ "$" ++ String.fromInt suite.priceModifier ++ " / night"
+                                                                        )
+                                                                    ]
+                                                                ]
+                                                            , p [ class "suite-card-desc" ] [ text suite.description ]
+                                                            ]
+                                                        ]
+                                                )
+                                                dest.suites
+                                            )
+                                        , div [ class "wizard-actions" ]
+                                            [ button [ type_ "button", class "btn-wizard-next", onClick (SetBookingStep 2) ] [ text "Continue to Dates & Guests ➔" ]
+                                            ]
                                         ]
-                                    ]
-                                ]
-                            , div [ class "form-group" ]
-                                [ label [ for "booking-notes", class "form-label" ] [ text "Special Requests" ]
-                                , textarea [ id "booking-notes", class "form-textarea", placeholder "Honeymoon, anniversary, dietary needs…", value model.bookingForm.notes, onInput UpdateBookingFormNotes ] []
-                                ]
-                            , div [ class "modal-price-summary" ]
-                                [ div [ class "modal-price-block" ]
-                                    [ p [ class "price-from" ] [ text "Estimated Cost" ]
-                                    , p [ class "price-amount" ] [ text ("$" ++ String.fromInt priceCalculated) ]
-                                    , p [ class "price-duration" ] [ text ("for " ++ model.bookingForm.travelers ++ " people · " ++ dest.duration) ]
-                                    ]
-                                , button [ type_ "submit", class "btn-book", id "booking-submit-btn", disabled model.submittingBooking ]
-                                    [ if model.submittingBooking then
-                                        span [] [ span [ class "spinner" ] [], text " Sending…" ]
+
+                              -- STEP 2: Dates & Guests
+                              else if model.bookingStep == 2 then
+                                div [ class "wizard-step-panel animate-fade" ]
+                                    [ div [ class "form-row" ]
+                                        [ div [ class "form-group" ]
+                                            [ label [ for "booking-checkin", class "form-label" ] [ text "Arrival Date" ]
+                                            , input [ type_ "date", id "booking-checkin", class "form-input", value model.bookingForm.checkin, onInput UpdateBookingFormCheckin, required True ] []
+                                            ]
+                                        , div [ class "form-group" ]
+                                            [ label [ for "booking-checkout", class "form-label" ] [ text "Departure Date" ]
+                                            , input [ type_ "date", id "booking-checkout", class "form-input", value model.bookingForm.checkout, onInput UpdateBookingFormCheckout, required True ] []
+                                            ]
+                                        ]
+                                    , if model.bookingForm.checkin >= model.bookingForm.checkout then
+                                        div [ class "date-warning" ] [ text "✦ Departure date must be after arrival date" ]
 
                                       else
-                                        span []
-                                            [ text "Send Inquiry "
-                                            , Html.node "svg"
-                                                [ attribute "width" "14"
-                                                , attribute "height" "14"
-                                                , attribute "viewBox" "0 0 24 24"
-                                                , attribute "fill" "none"
-                                                , attribute "stroke" "currentColor"
-                                                , attribute "stroke-width" "2"
-                                                ]
-                                                [ Html.node "line" [ attribute "x1" "5", attribute "y1" "12", attribute "x2" "19", attribute "y2" "12" ] []
-                                                , Html.node "polyline" [ attribute "points" "12,5 19,12 12,19" ] []
+                                        let
+                                            pct =
+                                                round ((seasonMultiplier - 1.0) * 100.0)
+                                        in
+                                        if pct > 15 then
+                                            div [ class "season-badge peak" ] [ text ("✦ Peak Season Rates Apply (+" ++ String.fromInt pct ++ "% for selected month)") ]
+
+                                        else if pct < -15 then
+                                            div [ class "season-badge value" ] [ text ("✦ Value Season Rates Apply (" ++ String.fromInt pct ++ "% for selected month)") ]
+
+                                        else
+                                            div [ class "season-badge standard" ] [ text "✦ Standard Season Rates Apply" ]
+                                    , div [ class "form-row", style "margin-top" "16px" ]
+                                        [ div [ class "form-group" ]
+                                            [ label [ for "booking-travelers", class "form-label" ] [ text "Travelers" ]
+                                            , select [ id "booking-travelers", class "form-select", value model.bookingForm.travelers, onInput UpdateBookingFormTravelers ]
+                                                [ option [ value "1" ] [ text "1 traveler" ]
+                                                , option [ value "2" ] [ text "2 travelers" ]
+                                                , option [ value "3" ] [ text "3 travelers" ]
+                                                , option [ value "4" ] [ text "4+ travelers" ]
                                                 ]
                                             ]
+                                        , div [ class "form-group" ]
+                                            [ label [ for "booking-budget", class "form-label" ] [ text "Budget Range" ]
+                                            , select [ id "booking-budget", class "form-select", value model.bookingForm.budget, onInput UpdateBookingFormBudget ]
+                                                [ option [] [ text "Under $3,000" ]
+                                                , option [] [ text "$3,000 - $6,000" ]
+                                                , option [] [ text "$6,000 - $10,000" ]
+                                                , option [] [ text "$10,000+" ]
+                                                ]
+                                            ]
+                                        ]
+                                    , div [ class "wizard-actions" ]
+                                        [ button [ type_ "button", class "btn-wizard-prev", onClick (SetBookingStep 1) ] [ text "⮨ Select Sanctuary" ]
+                                        , button [ type_ "button", class "btn-wizard-next", onClick (SetBookingStep 3), disabled (model.bookingForm.checkin >= model.bookingForm.checkout) ] [ text "Continue to Curation ➔" ]
+                                        ]
+                                    ]
+
+                              -- STEP 3: Curated Add-Ons & Personal Details
+                              else
+                                div [ class "wizard-step-panel animate-fade" ]
+                                    [ p [ class "step-helper-text" ] [ text "Enhance your escape with bespoke curator additions." ]
+                                    , div [ class "addon-grid" ]
+                                        [ button
+                                            [ type_ "button"
+                                            , class ("addon-card" ++ (if model.addOnHelicopter then " active" else ""))
+                                            , onClick (ToggleAddOn "helicopter")
+                                            ]
+                                            [ span [ class "addon-badge" ] [ text "+$750" ]
+                                            , h4 [ class "addon-name" ] [ text "Heli-Transfer" ]
+                                            , p [ class "addon-desc" ] [ text "Arrive directly to the resort landing pad via private charter." ]
+                                            ]
+                                        , button
+                                            [ type_ "button"
+                                            , class ("addon-card" ++ (if model.addOnYacht then " active" else ""))
+                                            , onClick (ToggleAddOn "yacht")
+                                            ]
+                                            [ span [ class "addon-badge" ] [ text "+$1,200" ]
+                                            , h4 [ class "addon-name" ] [ text "Yacht Excursion" ]
+                                            , p [ class "addon-desc" ] [ text "Four-hour private cruise with custom sommelier and dining onboard." ]
+                                            ]
+                                        , button
+                                            [ type_ "button"
+                                            , class ("addon-card" ++ (if model.addOnSommelier then " active" else ""))
+                                            , onClick (ToggleAddOn "sommelier")
+                                            ]
+                                            [ span [ class "addon-badge" ] [ text "+$450" ]
+                                            , h4 [ class "addon-name" ] [ text "In-Villa Cellar" ]
+                                            , p [ class "addon-desc" ] [ text "Sommelier-stocked local vintage cabinet refreshed daily." ]
+                                            ]
+                                        ]
+                                    , div [ class "form-row", style "margin-top" "24px" ]
+                                        [ div [ class "form-group" ]
+                                            [ label [ for "booking-name", class "form-label" ] [ text "Full Name" ]
+                                            , input [ type_ "text", id "booking-name", class "form-input", placeholder "Your name", value model.bookingForm.name, onInput UpdateBookingFormName, required True ] []
+                                            ]
+                                        , div [ class "form-group" ]
+                                            [ label [ for "booking-email", class "form-label" ] [ text "Email" ]
+                                            , input [ type_ "email", id "booking-email", class "form-input", placeholder "you@email.com", value model.bookingForm.email, onInput UpdateBookingFormEmail, required True ] []
+                                            ]
+                                        ]
+                                    , div [ class "form-group" ]
+                                        [ label [ for "booking-notes", class "form-label" ] [ text "Special Requests" ]
+                                        , textarea [ id "booking-notes", class "form-textarea", placeholder "Dietary requests, room adjustments, honeymoon notes...", value model.bookingForm.notes, onInput UpdateBookingFormNotes ] []
+                                        ]
+                                    , div [ class "wizard-actions" ]
+                                        [ button [ type_ "button", class "btn-wizard-prev", onClick (SetBookingStep 2) ] [ text "⮨ Dates & Guests" ]
+                                        , button [ type_ "submit", class "btn-book", id "booking-submit-btn", disabled model.submittingBooking ]
+                                            [ if model.submittingBooking then
+                                                span [] [ span [ class "spinner" ] [], text " Sending…" ]
+
+                                              else
+                                                span []
+                                                    [ text "Send Inquiry "
+                                                    , Html.node "svg"
+                                                        [ attribute "width" "14"
+                                                        , attribute "height" "14"
+                                                        , attribute "viewBox" "0 0 24 24"
+                                                        , attribute "fill" "none"
+                                                        , attribute "stroke" "currentColor"
+                                                        , attribute "stroke-width" "2"
+                                                        ]
+                                                        [ Html.node "line" [ attribute "x1" "5", attribute "y1" "12", attribute "x2" "19", attribute "y2" "12" ] []
+                                                        , Html.node "polyline" [ attribute "points" "12,5 19,12 12,19" ] []
+                                                        ]
+                                                    ]
+                                            ]
+                                        ]
+                                    ]
+
+                              -- COST ESTIMATE BLOCK (Visible throughout all steps for instant feedback)
+                            , div [ class "modal-price-summary" ]
+                                [ p [ class "price-summary-title" ] [ text "Inquiry Calculation Formula" ]
+                                , div [ class "price-summary-table" ]
+                                    [ div [ class "price-summary-row" ]
+                                        [ span [ class "formula-label" ]
+                                            [ text
+                                                (if dest.id == "itinerary" then
+                                                    "Itinerary Combined Rate"
+
+                                                 else
+                                                    "Sanctuary Base Rate"
+                                                )
+                                            ]
+                                        , span [ class "formula-value" ] [ text ("$" ++ String.fromInt basePrice) ]
+                                        ]
+                                    , if dest.id /= "itinerary" && suiteModifier > 0 then
+                                        div [ class "price-summary-row" ]
+                                            [ span [ class "formula-label" ] [ text "Suite Level Upgrade" ]
+                                            , span [ class "formula-value" ] [ text ("+ $" ++ String.fromInt suiteModifier) ]
+                                            ]
+
+                                      else
+                                        text ""
+                                    , div [ class "price-summary-row" ]
+                                        [ span [ class "formula-label" ] [ text "Travelers Multiplier" ]
+                                        , span [ class "formula-value" ] [ text ("× " ++ String.fromInt travelersInt) ]
+                                        ]
+                                    , if dest.id /= "itinerary" && seasonMultiplier /= 1.0 then
+                                        div [ class "price-summary-row" ]
+                                            [ span [ class "formula-label" ] [ text "Seasonal Factor" ]
+                                            , span [ class "formula-value" ] [ text ("× " ++ String.fromFloat seasonMultiplier) ]
+                                            ]
+
+                                      else
+                                        text ""
+                                    , if addOnCost > 0 then
+                                        div [ class "price-summary-row" ]
+                                            [ span [ class "formula-label" ] [ text "Curator Add-ons" ]
+                                            , span [ class "formula-value" ] [ text ("+ $" ++ String.fromInt addOnCost) ]
+                                            ]
+
+                                      else
+                                        text ""
+                                    ]
+                                , hr [ class "summary-break-line" ] []
+                                , div [ class "price-total-row" ]
+                                    [ div [ class "price-total-text" ]
+                                        [ p [ class "total-label" ] [ text "Estimated Cost" ]
+                                        , p [ class "total-sublabel" ] [ text ("for " ++ String.fromInt travelersInt ++ " guests · " ++ dest.duration) ]
+                                        ]
+                                    , p [ class "total-amount" ] [ text ("$" ++ String.fromInt priceCalculated) ]
                                     ]
                                 ]
                             ]
                         ]
                     ]
                 ]
+
+
+getSeasonMultiplier : Destination -> String -> Float
+getSeasonMultiplier dest dateStr =
+    let
+        monthPart =
+            String.slice 5 7 dateStr
+
+        monthIdx =
+            String.toInt monthPart
+                |> Maybe.map (\m -> m - 1)
+                |> Maybe.withDefault 6 -- Default to July (index 6)
+    in
+    if dest.id == "itinerary" then
+        1.0
+
+    else
+        List.drop monthIdx dest.climate.price
+            |> List.head
+            |> Maybe.withDefault 1.0
 
 
 renderTripPanel : Model -> Html Msg
